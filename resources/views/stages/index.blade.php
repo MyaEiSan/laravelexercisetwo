@@ -8,7 +8,7 @@
         <div class="col-md-12">
             <a href="#createmodal" class="btn btn-primary btn-sm rounded-0" data-bs-toggle="modal">Create</a>
             <hr/>
-            <table class="table table-sm table-hover border">
+            <table id="stages-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -169,6 +169,8 @@
         })
 
         // End Delete Item 
+
+        $("#stages-table").DataTable();
 
     })
 </script>

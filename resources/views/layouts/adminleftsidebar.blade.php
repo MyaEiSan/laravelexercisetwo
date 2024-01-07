@@ -28,6 +28,7 @@
                             
                                 <ul id="sidebarlayout" class="collapse ps-2">
                                     <li><a href="{{route('attendances.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Att Form</a></li>
+                                    <li><a href="{{route('enrolls.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>Enroll</a></li>
                                 </ul>
     
                             </li>

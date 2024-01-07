@@ -37,7 +37,7 @@
         </div>
 
         <div class="col-md-12">
-            <table class="table table-sm table-hover border">
+            <table id="attendedform-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -137,7 +137,7 @@
             
             $("#edit_attcode").val($(this).attr('data-attcode'));
             $("#edit_classdate").val($(this).data('classdate'));
-            $("#edit_post_id").val($(this).data('edit_postid'));
+            $("#edit_post_id").val($(this).data('postid'));
 
             const getid = $(this).attr('data-id');
             $("#formaction").attr('action',`/attendances/${getid}`);
@@ -161,6 +161,8 @@
         })
 
         // End Delete Item 
+
+        $("#attendedform-table").DataTable();
 
     })
 </script>

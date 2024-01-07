@@ -25,12 +25,25 @@
         <hr/>
 
         <div class="col-md-12">
+            <form action="" method="">
+                <div class="row justify-content-end">
+                    <div class="col-md-2 col-sm-6 mb-2">
+                        <div class="input-group">
+                            <input type="text" name="filtername" id="filtername" class="form-control form-control-sm rounded-0" placeholder="Search..." value="{{request('filtername')}}"/>
+                            <button type="button" id="btn-search" class="btn btn-secondary btn-sm"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-12">
 
             {{-- <a href="{{route('cities.create')}}" class="btn btn-primary btn-sm rounded-0">Create</a>
 
             <hr/> --}}
 
-            <table class="table table-sm table-hover border">
+            <table id="city-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -103,7 +116,28 @@
 {{-- END MODAL AREA  --}}
 
 @section('scripts')
-<script>
+<script type="text/javascript">
+
+    // Start Filter 
+
+    const getfilterbtn = document.getElementById('btn-search');
+
+    getfilterbtn.addEventListener('click', function(e){
+        const getfiltername = document.getElementById('filtername').value;
+        const getcururl = window.location.href;
+
+        console.log(getcururl);
+        console.log(getcururl.split('?'));
+        console.log(getcururl.split('?')[0]);
+
+        window.location.href = getcururl.split('?')[0] + '?filtername='+getfiltername;
+        
+
+        e.preventDefault();
+    });
+
+    // End Filter 
+
     $(document).ready(function(){
 
         // Start Delete item 
@@ -136,6 +170,8 @@
         })
 
         // End Edit Form 
+
+        // $("#city-table").DataTable();
     })
 </script>
 @endsection

@@ -118,8 +118,9 @@
 <!--End Content Area-->
 
 @section('css')
+{{-- summernote css1 js1 --}}
+<link href="{{asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.css')}}" rel="stylesheet" type="text/css" />
 <style type="text/css">
-
 		.gallery{
 			width: 100%;
             height: 100%;
@@ -153,6 +154,8 @@
 @endsection
 
 @section('scripts')
+{{-- summernote css1 js1  --}}
+<script src="{{asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function(){
 			// console.log('hi');
@@ -183,9 +186,29 @@
 				}
 			};
 
+            //Start Single Image Preview 
 			$("#image").change(function(){
 				previewimages(this,'.gallery');
 			});
+
+            //End Single Image Preview 
+
+            //Start text editor for content 
+
+            $('#content').summernote({
+                placeholder: 'Say Something...',
+                tabsize: 2,
+                height: 120,
+                toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link']]
+                ]
+            });
+
+             //End text editor for content 
 
 		});
 </script>

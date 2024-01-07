@@ -29,7 +29,7 @@
             {{-- <a href="{{route('genders.create')}}" class="btn btn-primary btn-sm rounded-0">Create</a>
 
             <hr/> --}}
-            <table class="table table-sm table-hover border">
+            <table id="gender-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -135,6 +135,8 @@
         })
 
         // End Edit Form 
+
+        $("#gender-table").DataTable();
     })
 </script>
 @endsection

@@ -10,7 +10,7 @@
 
             <hr/>
 
-            <table class="table table-sm table-hover border">
+            <table id="student-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -68,6 +68,8 @@
                 return false;
             }
         })
+
+        $("#student-table").DataTable();
     })
 </script>
 @endsection

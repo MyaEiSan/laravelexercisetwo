@@ -66,6 +66,9 @@
     <!-- https://github.com/toorshia/justgage#getting-started -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/justgage/1.2.9/justgage.min.js"></script>
+
+    {{-- datatable css1 js 1 --}}
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <!--custom js-->
     <script src="{{asset('assets/dist/js/app.js')}}" type="text/javascript"></script>
     @yield('scripts')

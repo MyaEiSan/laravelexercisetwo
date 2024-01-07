@@ -30,7 +30,7 @@
 
             <hr/> --}}
 
-            <table class="table table-sm table-hover border">
+            <table id="status-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -136,6 +136,8 @@
         })
 
         // End Edit Form 
+
+        $("#status-table").DataTable();
     })
 </script>
 @endsection

@@ -10,7 +10,7 @@
 
             <hr/>
 
-            <table class="table table-sm table-hover border">
+            <table id="mytable" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -66,9 +66,16 @@
 @endsection
 <!--End Content Area-->
 
+@section('css')
+    {{-- <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/> --}}
+@endsection
+
 @section('scripts')
+{{-- <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js" type="text/javascript"></script> --}}
 <script>
     $(document).ready(function(){
+
+        // Start delete btn 
         $('.delete-btns').click(function(){
 
             var getidx = $(this).data('idx');
@@ -78,7 +85,14 @@
             }else{
                 return false;
             }
-        })
-    })
+        });
+
+        // End delete btn 
+
+        // for mytable 
+        // let table = new DataTable('#mytable');
+        $("#mytable").DataTable();
+
+    });
 </script>
 @endsection

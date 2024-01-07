@@ -27,9 +27,13 @@
                         <div class="col-md-6 form-group">
                             <label for="status_id">Status <span class="text-danger">*</span></label>
                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
-                                @foreach ($statuses as $status)
+                                {{-- @foreach ($statuses as $status)
                                     <option value="{{$status->id}}">{{$status->name}}</option>
+                                @endforeach --}}
+                                @foreach ($statuses as $idx=>$name)
+                                    <option value="{{$idx}}">{{$name}}</option>
                                 @endforeach
+
                            </select>
                         </div>
 

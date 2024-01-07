@@ -14,13 +14,18 @@ class RolesControler extends Controller
     
     public function index()
     {
-        $roles = Role::all();
-        return view('roles.index',compact('roles'));
+        $roles = Role::where(function($query){
+           if($statusid = request('filterstatus_id')){
+            $query->where('status_id',$statusid);
+           }
+        })->get();
+        $filterstatuses = Status::whereIn('id',[3,4])->get()->pluck('name','id')->prepend('Choose Status','');
+        return view('roles.index',compact('roles','filterstatuses'));
     }
 
     public function create()
     {
-        $statuses = Status::whereIn('id',[3,4])->get();
+        $statuses = Status::whereIn('id',[3,4])->get()->pluck('name','id');
         return view('roles.create',compact('statuses'));
     }
 

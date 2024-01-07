@@ -16,7 +16,8 @@ class EnrollsController extends Controller
     public function index()
     {
         $enrolls = Enroll::all();
-        return view('enrolls.index',compact('enrolls'));
+        $stages = Stage::whereIn('id',[1,2,3])->get();
+        return view('enrolls.index',compact('enrolls','stages'));
     }
 
     public function create()
@@ -73,41 +74,19 @@ class EnrollsController extends Controller
 
     public function update(Request $request, string $id)
     {
+
+        // dd($request->all());
         $this->validate($request,[
-            'name' => ['required','max:50','unique:roles,name,'.$id],
-            'image' => ['image','mimes:jpg,jpeg,png','max:1024'],
-            'status_id' => ['required','in:3,4']
+            'stage_id' => 'required',
+            'remark' => 'nullable'
         ]);
 
         $user = Auth::user();
         $user_id = $user['id'];
 
         $enroll = Enroll::findOrFail($id);
-        $enroll->name = $request['name'];
-        $enroll->slug = Str::slug($request['name']);
-        $enroll->status_id = $request['status_id'];
-        $enroll->user_id = $user->id;
-
-        // Remove Old Image 
-        if($request->hasFile('image')){
-
-            $path = $enroll->image;
-
-            if(File::exists($path)){
-                File::delete($path);
-            }
-        }
-
-        // Single Image Upload 
-        if($request->hasFile('image')){
-            $file = $request->file('image');
-            $fname = $file->getClientOriginalName();
-            $imagenewname = uniqid($user_id).$enroll['id'].$fname;
-            $file->move(public_path('assets/img/enrolls/'),$imagenewname);
-
-            $filepath = "assets/img/enrolls/".$imagenewname;
-            $enroll->image = $filepath;
-        }
+        $enroll->stage_id = $request['stage_id'];
+        $enroll->remark = $request['remark'];
 
         $enroll->save();
 

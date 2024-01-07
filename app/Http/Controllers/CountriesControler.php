@@ -11,7 +11,16 @@ class CountriesControler extends Controller
 {
     public function index()
     {
-        $countries = Country::all();
+        // http://localhost:8000/countries?filtername=My
+        // dd(request('filtername'));
+
+        $countries = Country::where(function($query){
+            if($getname = request('filtername')){
+                $query->where('name','LIKE','%'.$getname.'%');
+            }
+        })->get();
+        // dd($countries);
+        
         return view('countries.index',compact('countries'));
     }
 

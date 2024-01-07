@@ -16,6 +16,9 @@
         <!-- jqueryui css1 js1 -->
         <link href="{{asset('assets/libs/jquery-ui-1.13.2.custom/jquery-ui.min.css')}}" rel="stylesheet" type="text/css" />
 
+        {{-- datatable css1 js 1 --}}
+        <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+
         <!--Custom Css-->
         <link href="{{asset('assets/dist/css/style.css')}}" rel="stylesheet" type="text/css" />
 

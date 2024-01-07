@@ -33,7 +33,7 @@
         </div>
 
         <div class="col-md-12">
-            <table class="table table-sm table-hover border">
+            <table id="tag-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -152,6 +152,8 @@
         })
 
         // End Delete Item 
+
+        $("#tag-table").DataTable();
 
     })
 </script>

@@ -214,4 +214,18 @@ a{
 
 /*End Shortcut Area*/
 
+
+
+/* Start Enroll  */
+
+/* show  */
+
+.enrollboxes:hover{
+	border:1px solid skyblue !important;
+	transform: translateY(-1px);
+}
+/* show  */
+
+/* End Enroll  */
+
 /*14FN*/
