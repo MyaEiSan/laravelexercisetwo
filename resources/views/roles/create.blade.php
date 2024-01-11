@@ -5,7 +5,7 @@
     {{-- Start Page Content  --}}
     <div class="container-fluid">
         <div class="col-md-12">
-            <form action="/posts" method="POST" enctype="multipart/form-data">
+            <form action="/roles" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-md-4">
@@ -22,19 +22,26 @@
                         <div class="col-md-6 form-group mb-3">
                             <label for="name">Name <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Enter Role Name" value="{{old('name')}}" /> 
+                            @error('name')
+                               <span class="text-danger">{{$message}}</span>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 form-group">
                             <label for="status_id">Status <span class="text-danger">*</span></label>
                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
+                                <option selected disabled>Choose status</option>
                                 {{-- @foreach ($statuses as $status)
                                     <option value="{{$status->id}}">{{$status->name}}</option>
                                 @endforeach --}}
                                 @foreach ($statuses as $idx=>$name)
-                                    <option value="{{$idx}}">{{$name}}</option>
+                                    <option value="{{$idx}}" @if(old('status_id') == $idx) selected @endif>{{$name}}</option>
                                 @endforeach
 
                            </select>
+                            @error('status_id')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 d-flex align-items-end  justify-content-end">

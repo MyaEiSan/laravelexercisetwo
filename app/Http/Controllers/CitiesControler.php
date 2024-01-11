@@ -16,7 +16,7 @@ class CitiesControler extends Controller
             if($getname = request('filtername')){
                 $query->where('name','LIKE','%'.$getname.'%');
             }
-        })->get();
+        })->orderBy('id','asc')->paginate(10);
         return view('cities.index',compact('cities'));
     }
 

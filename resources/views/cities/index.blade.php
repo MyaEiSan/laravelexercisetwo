@@ -11,6 +11,9 @@
                 <div class="row align-items-end">
                     <div class="col-md-6 form-group">
                         <label for="name">Name <span class="text-danger">*</span></label>
+                        @error('name')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ener City Name" value="{{old('name')}}" /> 
                     </div>
                     <div class="col-md-6">
@@ -57,7 +60,8 @@
                 <tbody>
                 @foreach($cities as $idx=>$city)
                 <tr>
-                        <td>{{++$idx}}</td>
+                        {{-- <td>{{++$idx}}</td> --}}
+                        <td>{{$idx + $cities->firstItem()}}</td>
                         <td>{{$city->name}}</td>
                         <td>{{$city->user['name']}}</td>
                         <td>{{$city->created_at->format('d M Y')}}</td>
@@ -74,6 +78,7 @@
                 @endforeach
                 </tbody>
             </table>
+            {{$cities->links('pagination::bootstrap-4')}}
 
         </div>
     </div>

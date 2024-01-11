@@ -75,14 +75,10 @@ class EnrollsController extends Controller
     public function update(Request $request, string $id)
     {
 
-        // dd($request->all());
         $this->validate($request,[
             'stage_id' => 'required',
             'remark' => 'nullable'
         ]);
-
-        $user = Auth::user();
-        $user_id = $user['id'];
 
         $enroll = Enroll::findOrFail($id);
         $enroll->stage_id = $request['stage_id'];

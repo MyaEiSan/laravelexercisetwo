@@ -11,7 +11,13 @@
                 <div class="row align-items-end">
                     <div class="col-md-6 form-group">
                         <label for="name">Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ener Gender Name" value="{{old('name')}}" /> 
+                        @error('name')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                        <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0 @error('name') is-invalid @enderror" placeholder="Ener Gender Name" value="{{old('name')}}" /> 
+                        {{-- @error('name')
+                        <span class="invalid-feedback">{{$message}}</span>
+                        @enderror --}}
                     </div>
                     <div class="col-md-6">
                         <button type="reset" class="btn btn-secondary btn-sm rounded-0">Cancel</button>

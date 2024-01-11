@@ -15,7 +15,7 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = Tag::all();
+        $tags = Tag::orderBy('id','asc')->paginate(10);
         $statuses = Status::whereIn('id',[3,4])->get();
 
         return view('tags.index',['tags' => $tags,'statuses'=>$statuses]);

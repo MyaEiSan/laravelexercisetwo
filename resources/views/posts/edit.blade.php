@@ -24,18 +24,30 @@
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="startdate">Start Date <span class="text-danger">*</span></label>
+                                @error('startdate')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <input type="date" name="startdate" id="startdate" class="form-control form-control-sm rounded-0" placeholder="Enter Start Date" value="{{$post->startdate}}" /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="enddate">End Date <span class="text-danger">*</span></label>
+                                @error('enddate')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <input type="date" name="enddate" id="enddate" class="form-control form-control-sm rounded-0" placeholder="Enter End Date" value="{{$post->enddate}}" /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="starttime">Start Time <span class="text-danger">*</span></label>
+                                @error('starttime')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <input type="time" name="starttime" id="starttime" class="form-control form-control-sm rounded-0" placeholder="Enter Start Time" value="{{$post->starttime}}" /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="endtime">End Time <span class="text-danger">*</span></label>
+                                @error('endtime')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <input type="time" name="endtime" id="endtime" class="form-control form-control-sm rounded-0" placeholder="Enter Start Time" value="{{$post->endtime}}" /> 
                             </div>
                             <div class="col-md-12 form-group">
@@ -66,12 +78,19 @@
                        <div class="row">
                         <div class="col-md-12 form-group mb-3">
                             <label for="title">Title <span class="text-danger">*</span></label>
+                            @error('title')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                             <input type="text" name="title" id="title" class="form-control form-control-sm rounded-0" placeholder="Enter Post Title" value="{{$post->title}}" /> 
                         </div>
 
                         <div class="col-md-6 form-group">
                             <label for="type_id">Type <span class="text-danger">*</span></label>
+                            @error('type_id')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                            <select name="type_id" id="type_id" class="form-control form-control-sm rounded-0">
+                                <option selected disabled>Choose Type</option>
                                 @foreach ($types as $type)
                                     <option value="{{$type->id}}" 
                                         @if($type['id'] === $post['type_id'])
@@ -84,17 +103,27 @@
 
                         <div class="col-md-6 form-group mb-3">
                             <label for="fee">Fee <span class="text-danger">*</span></label>
+                            @error('fee')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                             <input type="number" name="fee" id="fee" class="form-control form-control-sm rounded-0" placeholder="Class Fee" value="{{$post->fee}}" /> 
                         </div>
 
                         <div class="col-md-12 form-group mb-3">
                             <label for="content">Content <span class="text-danger">*</span></label>
+                            @error('content')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                             <textarea name="content" id="content" class="form-control form-control-sm rounded-0" rows="5" placeholder="Say Somethings...">{{$post->content}}</textarea>
                         </div>
 
                         <div class="col-md-3 form-group">
                             <label for="tag_id">Tag <span class="text-danger">*</span></label>
+                            @error('tag_id')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                            <select name="tag_id" id="tag_id" class="form-control form-control-sm rounded-0">
+                                <option selected disabled>Choose Tag</option>
                                 @foreach ($tags as $tag)
                                     <option value="{{$tag->id}}"
                                         @if($tag['id'] === $post['tag_id'])
@@ -107,6 +136,9 @@
 
                         <div class="col-md-3 form-group">
                             <label for="attshow">Show on Att Form <span class="text-danger">*</span></label>
+                            @error('attshow')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                            <select name="attshow" id="attshow" class="form-control form-control-sm rounded-0">
                                 @foreach ($attshows as $attshow)
                                     <option value="{{$attshow->id}}"
@@ -120,6 +152,9 @@
 
                         <div class="col-md-3 form-group">
                             <label for="status_id">Status <span class="text-danger">*</span></label>
+                            @error('status_id')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                            <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                                 @foreach ($statuses as $status)
                                     <option value="{{$status->id}}" {{$status['id'] === $post['status_id']?'selected':''}}>{{$status->name}}</option>

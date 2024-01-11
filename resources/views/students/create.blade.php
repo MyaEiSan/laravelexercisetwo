@@ -10,14 +10,23 @@
                 <div class="row">
                     <div class="col-md-6 form-group mb-3">
                         <label for="firstname">First Name <span class="text-danger">*</span></label>
+                        @error('firstname')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <input type="text" name="firstname" id="firstname" class="form-control form-control-sm rounded-0" placeholder="Ener First name" value="{{old('firstname')}}" /> 
                     </div>
                     <div class="col-md-6 form-group mb-3">
                         <label for="lastname">Last Name <span class="text-danger">*</span></label>
+                        @error('lastname')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <input type="text" name="lastname" id="lastname" class="form-control form-control-sm rounded-0" placeholder="Ener Last Name" value="{{old('lastname')}}"/> 
                     </div>
                     <div class="col-md-6 form-group mb-3">
                         <label for="regnumber">Register Number <span class="text-danger">*</span></label>
+                        @error('regnumber')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <input type="text" name="regnumber" id="regnumber" class="form-control form-control-sm rounded-0" placeholder="Ener Register Number" value="{{old('regnumber')}}"/> 
                     </div>
                     <div class="col-md-12 form-group mb-3">

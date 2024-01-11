@@ -44,7 +44,8 @@
                     <tbody>
                     @foreach($roles as $idx=>$role)
                     <tr>
-                            <td>{{++$idx}}</td>
+                            {{-- <td>{{++$idx}}</td> --}}
+                            <td>{{$idx + $roles->firstItem()}}</td>
                             <td><img src="{{asset($role->image)}}" class="rounded-circle" alt="{{$role->name}}" width="20" height="20"/> <a href="{{route('roles.show',$role->id)}}">{{$role->name}}</a></td>
                         
                             <td>{{$role->status->name}}</td>
@@ -64,6 +65,8 @@
                     @endforeach
                     </tbody>
                 </table>
+
+                {{$roles->links('pagination::bootstrap-4')}}
            </div>
 
         </div>

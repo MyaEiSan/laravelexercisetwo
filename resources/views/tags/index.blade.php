@@ -11,11 +11,17 @@
                 <div class="row align-items-end mb-3">
                     <div class="col-md-4 form-group">
                         <label for="name">Name <span class="text-danger">*</span></label>
+                        @error('name')
+                           <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ener Status Name" value="{{old('name')}}" /> 
                     </div>
 
                     <div class="col-md-4 form-group">
                         <label for="status_id">Status <span class="text-danger">*</span></label>
+                        @error('status_id')
+                           <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <select name="status_id" class="form-control form-control-sm rounded-0">
                             @foreach($statuses as $status)
                                 <option value="{{$status['id']}}">{{$status['name']}}</option>
@@ -48,7 +54,9 @@
                 <tbody>
                 @foreach($tags as $idx=>$tag)
                 <tr>
-                        <td>{{++$idx}}</td>
+                        {{-- <td>{{++$idx}}</td> --}}
+                        {{-- <td>{{$idx+1}}</td> --}}
+                        <td>{{$tags->firstItem()}}</td>
                         <td>{{$tag->name}}</td>
                        
                         <td>{{$tag->status->name}}</td>
@@ -67,7 +75,7 @@
                 @endforeach
                 </tbody>
             </table>
-
+            {{$tags->links('pagination::bootstrap-4')}}
         </div>
     </div>
     {{-- End Page Content  --}}
@@ -153,7 +161,7 @@
 
         // End Delete Item 
 
-        $("#tag-table").DataTable();
+        // $("#tag-table").DataTable();
 
     })
 </script>

@@ -18,7 +18,7 @@ class RolesControler extends Controller
            if($statusid = request('filterstatus_id')){
             $query->where('status_id',$statusid);
            }
-        })->get();
+        })->orderBy('id','asc')->paginate(10);
         $filterstatuses = Status::whereIn('id',[3,4])->get()->pluck('name','id')->prepend('Choose Status','');
         return view('roles.index',compact('roles','filterstatuses'));
     }

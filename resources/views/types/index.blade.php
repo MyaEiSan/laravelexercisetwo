@@ -11,11 +11,17 @@
                 <div class="row align-items-end mb-3">
                     <div class="col-md-4 form-group">
                         <label for="name">Name <span class="text-danger">*</span></label>
+                        @error('name')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ener Status Name" value="{{old('name')}}" /> 
                     </div>
 
                     <div class="col-md-4 form-group">
                         <label for="status_id">Status <span class="text-danger">*</span></label>
+                        @error('status_id')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                         <select name="status_id" class="form-control form-control-sm rounded-0">
                             @foreach($statuses as $status)
                                 <option value="{{$status['id']}}">{{$status['name']}}</option>
