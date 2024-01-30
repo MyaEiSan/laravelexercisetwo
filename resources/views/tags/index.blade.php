@@ -58,8 +58,12 @@
                         {{-- <td>{{$idx+1}}</td> --}}
                         <td>{{$tags->firstItem()}}</td>
                         <td>{{$tag->name}}</td>
-                       
-                        <td>{{$tag->status->name}}</td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input change-btn" {{ $tag->status_id === 3 ? 'checked':'' }} data-id="{{$tag->id}}" />
+                            </div>
+                        </td>
+
                         <td>{{$tag->user['name']}}</td>
                         <td>{{$tag->created_at->format('d M Y')}}</td>
                         <td>{{$tag->updated_at->format('d M Y')}}</td>
@@ -162,6 +166,29 @@
         // End Delete Item 
 
         // $("#tag-table").DataTable();
+
+          // Start change-btn 
+
+          $('.change-btn').change(function(){
+            
+            var getid = $(this).data('id');
+            // console.log(getid);
+            var setstatus = $(this).prop('checked') === true? 3 : 4;
+            // console.log(setstatus);
+
+            $.ajax({
+                url: "tagsstatus" ,
+                type: "GET",
+                dataType: "json",
+                data: {"id":getid,"status_id": setstatus},
+                success: function(response){
+                    // console.log(response);
+                    console.log(response.success);
+                }
+            });
+        });
+
+        // End change-btn 
 
     })
 </script>

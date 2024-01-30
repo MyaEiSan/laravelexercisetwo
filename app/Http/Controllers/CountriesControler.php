@@ -35,6 +35,8 @@ class CountriesControler extends Controller
     {
         $this->validate($request,[
             'name' => 'required|unique:countries,name'
+        ],[
+            'name.required' => 'Country name is required'
         ]);
 
         $user = Auth::user();
@@ -71,6 +73,8 @@ class CountriesControler extends Controller
     {
         $this->validate($request,[
             'name' => 'required|unique:countries,name,'.$id
+        ],[
+            'name.required' => 'Country name is required'
         ]);
 
         $user = Auth::user();

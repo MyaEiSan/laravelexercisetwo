@@ -49,6 +49,18 @@ class PostsController extends Controller
             'tag_id' => 'required',
             'attshow' => 'required|in:3,4',
             'status_id' => 'required|in:7,10,11'
+        ],[
+            'title.required' => 'Title is required',
+            'content.required' => 'Content is required',
+            'fee.required' => 'Fee is required',
+            'startdate.required' => 'Start date is required',
+            'enddate.required' => 'End date is required',
+            'starttime.required' => 'Start time is required',
+            'endtime.required' => 'End time is required',
+            'type_id.required' => 'Type is required',
+            'tag_id.required' => 'Tag is required',
+            'attshow.required' => 'Attendance show is required',
+            'status_id.required' => 'Status is required'
         ]);
 
         $user = Auth::user();
@@ -122,10 +134,13 @@ class PostsController extends Controller
     {
 
         $post = Post::findOrFail($id);
+        // dd($post->checkenroll(1));
+
         $dayables = $post->days()->get();
+        // dd($dayables);
         // $comments = Comment::where('commentable_id',$post->id)->where('commentable_type','App\Models\Post')->orderBy('created_at','desc')->get();
         $comments = $post->comments()->orderBy('updated_at','desc')->get();
-        return view('posts.show',["post"=>$post,'dayables' => $dayables ,'comments'=>$comments]);
+        return view('posts.show',["post"=>$post,'dayables'=>$dayables,'comments'=>$comments]);
     }
 
     
@@ -160,6 +175,18 @@ class PostsController extends Controller
             'tag_id' => 'required',
             'attshow' => 'required|in:3,4',
             'status_id' => 'required|in:7,10,11'
+        ],[
+            'title.required' => 'Title is required',
+            'content.required' => 'Content is required',
+            'fee.required' => 'Fee is required',
+            'startdate.required' => 'Start date is required',
+            'enddate.required' => 'End date is required',
+            'starttime.required' => 'Start time is required',
+            'endtime.required' => 'End time is required',
+            'type_id.required' => 'Type is required',
+            'tag_id.required' => 'Tag is required',
+            'attshow.required' => 'Attendance show is required',
+            'status_id.required' => 'Status is required'
         ]);
 
         $user = Auth::user();
@@ -215,42 +242,42 @@ class PostsController extends Controller
         }
 
         // Start Day Action 
-       if(isset($request['newday_id'])){
+    //    if(isset($request['newday_id'])){
 
-            // remove all days 
-            foreach($request['newday_id'] as $key=>$value){
-                $dayable =Dayable::where('dayable_id',$post['id'])
-                            ->where('dayable_type',$request['dayable_type']);
-                $dayable->delete();
-            }
+    //         // remove all days 
+    //         foreach($request['newday_id'] as $key=>$value){
+    //             $dayable =Dayable::where('dayable_id',$post['id'])
+    //                         ->where('dayable_type',$request['dayable_type']);
+    //             $dayable->delete();
+    //         }
 
-            // add renewday 
-            foreach($request['newday_id'] as $key=>$value){
-                $renewday = [
-                    'day_id' => $request['newday_id'][$key],
-                    'dayable_id' => $post['id'],
-                    'dayable_type' => $request['dayable_type']
-                ];
-                Dayable::insert($renewday);
-            }
-       }elseif(isset($request['day_id'])){
+    //         // add renewday 
+    //         foreach($request['newday_id'] as $key=>$value){
+    //             $renewday = [
+    //                 'day_id' => $request['newday_id'][$key],
+    //                 'dayable_id' => $post['id'],
+    //                 'dayable_type' => $request['dayable_type']
+    //             ];
+    //             Dayable::insert($renewday);
+    //         }
+    //    }elseif(isset($request['day_id'])){
 
-            $dayable =Dayable::where('dayable_id',$post['id'])
-                            ->where('dayable_type',$request['dayable_type']);
-            $dayable->delete();
+    //         $dayable =Dayable::where('dayable_id',$post['id'])
+    //                         ->where('dayable_type',$request['dayable_type']);
+    //         $dayable->delete();
 
-            foreach($request['newday_id'] as $key=>$value){
-                $renewday = [
-                    'day_id' => $request['newday_id'][$key],
-                    'dayable_id' => $post['id'],
-                    'dayable_type' => $request['dayable_type']
-                ];
-                Dayable::insert($renewday);
-            }
+    //         foreach($request['newday_id'] as $key=>$value){
+    //             $renewday = [
+    //                 'day_id' => $request['newday_id'][$key],
+    //                 'dayable_id' => $post['id'],
+    //                 'dayable_type' => $request['dayable_type']
+    //             ];
+    //             Dayable::insert($renewday);
+    //         }
             
-       }else{
+    //    }else{
 
-       }
+    //    }
         // End Day Action 
 
         return redirect(route('posts.index'));

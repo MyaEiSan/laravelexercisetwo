@@ -21,24 +21,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach($days as $idx=>$day)
+                @foreach($relatives as $idx=>$relative)
                 <tr>
                         <td>{{++$idx}}</td>
-                        <td>{{$day->name}}</td>
+                        <td>{{$relative->name}}</td>
                        
                         <td>
                             <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input change-btn" {{ $day->status_id === 3 ? 'checked':'' }} data-id="{{$day->id}}" />
+                                <input type="checkbox" class="form-check-input change-btn" {{ $relative->status_id === 3 ? 'checked':'' }} data-id="{{$relative->id}}" />
                             </div>
                         </td>
-                        <td>{{$day->user['name']}}</td>
-                        <td>{{$day->created_at->format('d M Y')}}</td>
-                        <td>{{$day->updated_at->format('d M Y')}}</td>
+                        <td>{{$relative->user['name']}}</td>
+                        <td>{{$relative->created_at->format('d M Y')}}</td>
+                        <td>{{$relative->updated_at->format('d M Y')}}</td>
                         <td>
-                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$day->id}}" data-name="{{$day->name}}" data-status="{{$day->status_id}}"><i class="fas fa-pen"></i></a>
+                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$relative->id}}" data-name="{{$relative->name}}" data-status="{{$relative->status_id}}"><i class="fas fa-pen"></i></a>
                             <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
-                        <form id="formdelete-{{$idx}}" action="{{route('days.destroy',$day->id)}}" method="POST">
+                        <form id="formdelete-{{$idx}}" action="{{route('relatives.destroy',$relative->id)}}" method="POST">
                             @csrf
                             @method('DELETE')
                         </form>
@@ -61,7 +61,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{route('days.store')}}" method="POST">
+                            <form action="{{route('relatives.store')}}" method="POST">
                                 {{csrf_field()}}
                                 <div class="row align-items-end">
                                     <div class="col-md-7 form-group">
@@ -148,7 +148,7 @@
             $("#editstatus_id").val($(this).data('status'));
 
             const getid = $(this).attr('data-id');
-            $("#formaction").attr('action',`/days/${getid}`);
+            $("#formaction").attr('action',`/relatives/${getid}`);
 
             e.preventDefault();
         })
@@ -172,9 +172,9 @@
 
         $("#day-table").DataTable();
 
-         // Start change-btn 
+        // Start change-btn 
 
-         $('.change-btn').change(function(){
+        $('.change-btn').change(function(){
             
             var getid = $(this).data('id');
             // console.log(getid);
@@ -182,7 +182,7 @@
             // console.log(setstatus);
 
             $.ajax({
-                url: "daysstatus" ,
+                url: "relativesstatus" ,
                 type: "GET",
                 dataType: "json",
                 data: {"id":getid,"status_id": setstatus},
@@ -194,7 +194,6 @@
         });
 
         // End change-btn 
-
 
     })
 </script>

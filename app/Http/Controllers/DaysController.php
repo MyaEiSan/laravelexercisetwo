@@ -37,6 +37,8 @@ class DaysController extends Controller
         $this->validate($request,[
             'name' => 'required|max:50|unique:days,name',
             'status_id' => 'required|in:3,4'
+        ],[
+            'name.required' => 'Day Name is required',
         ]);
 
         $user = Auth::user();
@@ -77,6 +79,8 @@ class DaysController extends Controller
         $this->validate($request,[
             'name' => 'required|max:50|unique:days,name,'.$id,
             'status_id' => 'required|in:3,4'
+        ],[
+            'name.required' => 'Day Name is required'
         ]);
 
         $user = Auth::user();
@@ -103,4 +107,16 @@ class DaysController extends Controller
 
         return redirect()->back();
     }
+
+    public function typestatus(Request $request){
+        $day = Day::findOrFail($request['id']);
+        $day->status_id = $request['status_id'];
+        $day->save();
+
+        return response()->json(["success"=>'Status Change Successfully.']);
+    }
 }
+
+// HW 
+
+// change message in validation if need 

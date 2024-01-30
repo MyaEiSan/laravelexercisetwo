@@ -37,6 +37,9 @@ class RolesControler extends Controller
             'name' => 'required|max:50|unique:roles,name',
             'image' => 'image|mimes:jpg,jpeg,png|max:1024',
             'status_id' => 'required|in:3,4'
+        ],[
+            'name.required' => 'Name is required',
+            'status_id.required' => 'Status is required'
         ]);
 
         $user = Auth::user();
@@ -86,6 +89,9 @@ class RolesControler extends Controller
             'name' => ['required','max:50','unique:roles,name,'.$id],
             'image' => ['image','mimes:jpg,jpeg,png','max:1024'],
             'status_id' => ['required','in:3,4']
+        ],[
+            'name.required' => 'Name is required',
+            'status_id.required' => 'Status is required'
         ]);
 
         $user = Auth::user();
@@ -139,5 +145,14 @@ class RolesControler extends Controller
         $role->delete();
 
         return redirect()->back();
+    }
+
+    public function typestatus(Request $request){ 
+
+        $role = Role::findOrFail($request['id']);
+        $role->status_id = $request['status_id'];
+        $role->save();
+
+        return response()->json(["success"=>'Status Change Successfully.']);
     }
 }

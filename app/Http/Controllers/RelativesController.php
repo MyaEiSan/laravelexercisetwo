@@ -5,21 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\Stage;
+use App\Models\Relative;
 use App\Models\Status;
 
-class StagesController extends Controller
+class RelativesController extends Controller
 {
-    
-    /**
+      /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $stages = Stage::all();
+        $relatives = Relative::all();
         $statuses = Status::whereIn('id',[3,4])->get();
 
-        return view('stages.index',['stages' => $stages,'statuses'=>$statuses]);
+        return view('relatives.index',['relatives' => $relatives,'statuses'=>$statuses]);
     }
 
     /**
@@ -36,7 +35,7 @@ class StagesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'name' => 'required|max:50|unique:categories,name',
+            'name' => 'required|max:50|unique:relatives,name',
             'status_id' => 'required|in:3,4'
         ],[
             'name.required' => 'Name is required',
@@ -46,15 +45,15 @@ class StagesController extends Controller
         $user = Auth::user();
         $user_id = $user['id'];
 
-        $stage = new Stage();
-        $stage->name = $request['name'];
-        $stage->slug = Str::slug($request['name']);
-        $stage->status_id = $request['status_id'];
-        $stage->user_id = $user_id;
+        $day = new Relative();
+        $day->name = $request['name'];
+        $day->slug = Str::slug($request['name']);
+        $day->status_id = $request['status_id'];
+        $day->user_id = $user_id;
 
-        $stage->save();
+        $day->save();
 
-        return redirect(route('stages.index'));
+        return redirect(route('relatives.index'));
     }
 
     /**
@@ -79,7 +78,7 @@ class StagesController extends Controller
     public function update(Request $request, string $id)
     {
         $this->validate($request,[
-            'name' => 'required|max:50|unique:categories,name,'.$id,
+            'name' => 'required|max:50|unique:relatives,name,'.$id,
             'status_id' => 'required|in:3,4'
         ],[
             'name.required' => 'Name is required',
@@ -89,15 +88,15 @@ class StagesController extends Controller
         $user = Auth::user();
         $user_id = $user['id'];
 
-        $stage = Stage::findOrFail($id);
-        $stage->name = $request['name'];
-        $stage->slug = Str::slug($request['name']);
-        $stage->status_id = $request['status_id'];
-        $stage->user_id = $user_id;
+        $day = Relative::findOrFail($id);
+        $day->name = $request['name'];
+        $day->slug = Str::slug($request['name']);
+        $day->status_id = $request['status_id'];
+        $day->user_id = $user_id;
 
-        $stage->save();
+        $day->save();
 
-        return redirect(route('stages.index'));
+        return redirect(route('relatives.index'));
     }
 
     /**
@@ -105,18 +104,16 @@ class StagesController extends Controller
      */
     public function destroy(string $id)
     {
-        $stage = Stage::findOrFail($id);
-        $stage->delete();
+        $day = Relative::findOrFail($id);
+        $day->delete();
 
         return redirect()->back();
     }
 
-    
-    public function typestatus(Request $request){ 
-
-        $stage = Stage::findOrFail($request['id']);
-        $stage->status_id = $request['status_id'];
-        $stage->save();
+    public function typestatus(Request $request){
+        $relative = Relative::findOrFail($request['id']);
+        $relative->status_id = $request['status_id'];
+        $relative->save();
 
         return response()->json(["success"=>'Status Change Successfully.']);
     }

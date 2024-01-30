@@ -69,8 +69,41 @@
 
     {{-- datatable css1 js 1 --}}
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+    {{-- toaster css1 js1  --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "progressBar": true,
+            'closeButton': true
+        }
+    </script>
+    
+        @if(session()->has('success'))
+            <script>
+                toastr.success('{{session()->get('success')}}', 'Successful')
+            </script>
+        @endif
+
+        @if(session()->has('info'))
+            <script>
+                toastr.info('{{session()->get('info')}}', 'Information')
+            </script> 
+        @endif
+
+        @if($errors)
+            @foreach($errors->all() as $error)
+                <script>
+                    toastr.error('{{$error}}','Warning!',{timeOut:3000})
+                </script> 
+            @endforeach
+        @endif
+    
+
     <!--custom js-->
     <script src="{{asset('assets/dist/js/app.js')}}" type="text/javascript"></script>
     @yield('scripts')
+
+
 </body>
 </html>

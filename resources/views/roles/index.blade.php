@@ -47,8 +47,12 @@
                             {{-- <td>{{++$idx}}</td> --}}
                             <td>{{$idx + $roles->firstItem()}}</td>
                             <td><img src="{{asset($role->image)}}" class="rounded-circle" alt="{{$role->name}}" width="20" height="20"/> <a href="{{route('roles.show',$role->id)}}">{{$role->name}}</a></td>
-                        
-                            <td>{{$role->status->name}}</td>
+                    
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input change-btn" {{ $role->status_id === 3 ? 'checked':'' }} data-id="{{$role->id}}" />
+                                </div>
+                            </td>
                             <td>{{$role->user['name']}}</td>
                             <td>{{$role->created_at->format('d M Y')}}</td>
                             <td>{{$role->updated_at->format('d M Y')}}</td>
@@ -112,6 +116,30 @@
         })
 
         // $("#role-table").DataTable();
+
+        // Start change-btn 
+
+        $('.change-btn').change(function(){
+            
+            var getid = $(this).data('id');
+            // console.log(getid);
+            var setstatus = $(this).prop('checked') === true? 3 : 4;
+            // console.log(setstatus);
+
+            $.ajax({
+                url: "rolesstatus" ,
+                type: "GET",
+                dataType: "json",
+                data: {"id":getid,"status_id": setstatus},
+                success: function(response){
+                    // console.log(response);
+                    console.log(response.success);
+                }
+            });
+        });
+
+        // End change-btn 
+
     })
 </script>
 @endsection

@@ -26,6 +26,10 @@ class AttendancesController extends Controller
             'classdate' => 'required|date',
             'post_id' => 'required',
             'attcode' => 'required'
+        ],[
+            'classdate.required' => 'Class date is required',
+            'post_id.required' => 'Post is required',
+            'attcode.required' => 'Attendance code is required' 
         ]);
 
         $user = Auth::user();
@@ -39,6 +43,8 @@ class AttendancesController extends Controller
 
         $attendance->save();
 
+        session()->flash('success','Success!');
+
         return redirect(route('attendances.index'));
     }
 
@@ -49,6 +55,10 @@ class AttendancesController extends Controller
             'classdate' => 'required|date',
             'post_id' => 'required',
             'attcode' => 'required'
+        ],[
+            'classdate.required' => 'Class date is required',
+            'post_id.required' => 'Post is required',
+            'attcode.required' => 'Attendance code is required' 
         ]);
 
         // $user = Auth::user();
@@ -61,6 +71,7 @@ class AttendancesController extends Controller
 
 
         $attendance->save();
+        session()->flash('success','Success!');
 
         return redirect(route('attendances.index'));
     }

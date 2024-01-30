@@ -22,6 +22,9 @@
         <!--Custom Css-->
         <link href="{{asset('assets/dist/css/style.css')}}" rel="stylesheet" type="text/css" />
 
+        {{-- toaster css1 js1  --}}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" type="text/css" />
+
         {{-- extra css --}}
         @yield('css')
     </head>

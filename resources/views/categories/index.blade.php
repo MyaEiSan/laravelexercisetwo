@@ -28,7 +28,7 @@
                        
                         <td>
                             <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input" {{ $category->status_id === 3 ? 'checked':'' }} />
+                                <input type="checkbox" class="form-check-input change-btn" {{ $category->status_id === 3 ? 'checked':'' }} data-id="{{$category->id}}" />
                             </div>
                         </td>
                         <td>{{$category->user['name']}}</td>
@@ -171,6 +171,31 @@
         // End Delete Item 
 
         $("#category-table").DataTable();
+
+        
+         // Start change-btn 
+
+         $('.change-btn').change(function(){
+            
+            var getid = $(this).data('id');
+            // console.log(getid);
+            var setstatus = $(this).prop('checked') === true? 3 : 4;
+            // console.log(setstatus);
+
+            $.ajax({
+                url: "categoriesstatus" ,
+                type: "GET",
+                dataType: "json",
+                data: {"id":getid,"status_id": setstatus},
+                success: function(response){
+                    // console.log(response);
+                    console.log(response.success);
+                }
+            });
+        });
+
+        // End change-btn 
+
     })
 </script>
 @endsection

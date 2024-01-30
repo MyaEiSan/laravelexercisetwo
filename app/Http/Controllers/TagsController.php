@@ -37,6 +37,9 @@ class TagsController extends Controller
         $this->validate($request,[
             'name' => 'required|max:50|unique:tags,name',
             'status_id' => 'required|in:3,4'
+        ],[
+            'name.required' => 'Name is required',
+            'status_id.required' => 'Status is required'
         ]);
 
         $user = Auth::user();
@@ -77,6 +80,9 @@ class TagsController extends Controller
         $this->validate($request,[
             'name' => 'required|max:50|unique:categories,name,'.$id,
             'status_id' => 'required|in:3,4'
+        ],[
+            'name.required' => 'Name is required',
+            'status_id.required' => 'Status is required'
         ]);
 
         $user = Auth::user();
@@ -102,5 +108,13 @@ class TagsController extends Controller
         $tag->delete();
 
         return redirect()->back();
+    }
+
+    public function typestatus(Request $request){
+        $tag = Tag::findOrFail($request['id']);
+        $tag->status_id = $request['status_id'];
+        $tag->save();
+
+        return response()->json(["success"=>'Status Change Successfully.']);
     }
 }

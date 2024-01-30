@@ -33,6 +33,10 @@ class StudentsController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'remark' => 'max:1000'
+        ],[
+            'regnumber.required' => 'Register number is required',
+            'firstname.required' => 'First name is required',
+            'lastname.required' => 'Last name is required'
         ]);
 
         $user = Auth::user();
@@ -73,6 +77,10 @@ class StudentsController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'remark' => 'max:1000'
+        ],[
+            'regnumber.required' => 'Register number is required',
+            'firstname.required' => 'First name is required',
+            'lastname.required' => 'Last name is required'
         ]);
 
         $user = Auth::user();

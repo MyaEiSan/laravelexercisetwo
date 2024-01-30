@@ -31,6 +31,8 @@ class CitiesControler extends Controller
     {
         $this->validate($request,[
             'name' => 'required|unique:cities,name'
+        ],[
+            'name.required' => 'City name is required'
         ]);
 
         $user = Auth::user();
@@ -67,6 +69,8 @@ class CitiesControler extends Controller
     {
         $this->validate($request,[
             'name' => 'required|unique:cities,name,'.$id
+        ],[
+            'name.required' => 'City name is required'
         ]);
 
         $user = Auth::user();
