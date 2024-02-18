@@ -1,11 +1,11 @@
 @extends('layouts.adminindex')
-@section('caption','Create Leave')
+@section('caption','Create Post')
 <!--Start Content Area-->
 @section('content')
     {{-- Start Page Content  --}}
     <div class="container-fluid">
         <div class="col-md-12">
-            <form action="/leaves" method="POST" enctype="multipart/form-data">
+            <form action="/announcements" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-md-4">
@@ -14,25 +14,23 @@
                                 <label for="image" class="gallery">Choose Images</label>
                                 <input type="file" name="image" id="image"  class="form-control form-control-sm rounded-0" value="{{old('image')}}" hidden /> 
                             </div>
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="startdate">Start Date <span class="text-danger">*</span></label>
-                                <input type="date" name="startdate" id="startdate" class="form-control form-control-sm rounded-0" placeholder="Enter Start Date" value="{{old('startdate',$gettoday)}}" /> 
-                            </div>
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="enddate">End Date <span class="text-danger">*</span></label>
-                                <input type="date" name="enddate" id="enddate" class="form-control form-control-sm rounded-0" placeholder="Enter End Date" value="{{old('enddate',$gettoday)}}" /> 
-                            </div>
                         </div>
                     </div>
                     <div class="col-md-8">
                        <div class="row">
-                            <div class="col-md-12 form-group mb-3">
+                            <div class="col-md-6 form-group mb-3">
                                 <label for="title">Title <span class="text-danger">*</span></label>
+                                @error('title')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <input type="text" name="title" id="title" class="form-control form-control-sm rounded-0" placeholder="Enter Post Title" value="{{old('title')}}" /> 
                             </div>
 
                             <div class="col-md-6 form-group">
                                 <label for="post_id">Class <span class="text-danger">*</span></label>
+                                @error('post_id')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <select name="post_id" id="post_id" class="form-control form-control-sm rounded-0">
                                         <option selected disabled>Choose class</option>
                                         @foreach ($posts as $id=>$title)
@@ -41,26 +39,17 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="tag">Tag <span class="text-danger">*</span></label>
-                                <select name="tag" id="tag" class="form-control form-control-sm rounded-0">
-                                    <option selected disabled>Choose tag</option>
-                                    @foreach ($tags as $id=>$name)
-                                        <option value="{{$id}}">{{$name}}</option>
-                                    @endforeach
-                            </select>
-                            </div>
-
                             <div class="col-md-12 form-group mb-3">
                                 <label for="content">Content <span class="text-danger">*</span></label>
+                                @error('content')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
                                 <textarea name="content" id="content" class="form-control form-control-sm rounded-0" rows="5" placeholder="Say Somethings...">{{old('content')}}</textarea>
                             </div>
 
-                            
-
-                            <div class="col-md-12 d-flex justify-content-end align-items-end">
+                            <div class="offset-md-9 mt-3 col-md-3 d-flex justify-content-end align-items-end">
                                 <div>
-                                    <a href="{{route('posts.index')}}" class="btn btn-secondary btn-sm rounded-0">Cancel</a>
+                                    <a href="{{route('announcements.index')}}" class="btn btn-secondary btn-sm rounded-0">Cancel</a>
                                     <button type="submit" class="btn btn-primary btn-sm rounded-0 ms-3">Submit</button>
                                 </div>
                             </div>

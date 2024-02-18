@@ -125,6 +125,8 @@ class PostsController extends Controller
                 }
             }
         }
+        
+        session()->flash('success','New Post Created');
 
         return redirect(route('posts.index'));
     }

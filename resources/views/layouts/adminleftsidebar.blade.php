@@ -42,7 +42,7 @@
                             
                                 <ul id="basicui" class="collapse ps-2">
                                     <li><a href="{{route('posts.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Post</a></li>
-                                    <li><a href="javascript:void(0)" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Announcement</a></li>
+                                    <li><a href="{{route('announcements.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Announcement</a></li>
                                 </ul>
     
                             </li>

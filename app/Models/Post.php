@@ -69,5 +69,9 @@ class Post extends Model
         return DB::table('enrolls')->where('post_id',$this->id)->where('user_id',$userid)->exists();
     }
 
+    public function likes(){
+        return $this->belongsToMany(Post::class,'post_like');
+    }
+
 
 }

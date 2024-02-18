@@ -1,5 +1,4 @@
 @extends('layouts.adminindex')
-@section('caption','leave Show')
 @section('content')
 
     <!-- Start Page Content Area -->
@@ -11,7 +10,7 @@
         <div class="col-md-12">
 
             <a href="javascript:void(0);" id="btn-back" class="btn btn-secondary btn-sm rounded-0">Back</a>
-            <a href="{{route('leaves.index')}}" class="btn btn-secondary btn-sm rounded-0">Close</a>
+            <a href="{{route('announcements.index')}}" class="btn btn-secondary btn-sm rounded-0">Close</a>
 
             <hr/>
 
@@ -24,51 +23,20 @@
                     <div class="card-body">
 
                         <div class="d-flex flex-column align-items-center mb-3">
-                            <div class="h5 mb-1">{{$leave->title}}</div>
+                            <div class="h5 mb-1">{{$announcement->title}}</div>
                             <div class="text-muted">
-                                <span>{{$leave["stage"]["name"]}} : {{$leave->fee}}</span>
+                                <span>{{$announcement->post["title"]}}</span>
                             </div>
-                            <img src="{{asset($leave->image)}}" alt="{{$leave->title}}" width="200" />
+                            <img src="{{asset($announcement->image)}}" alt="{{$announcement->title}}" width="200" />
                         </div>   
                         
-                        <div class="w-100 d-flex flex-row justify-content-between mb-3">
-                           
+                        <div class="w-100 d-flex flex-row justify-content-between mb-3"> 
                             <a href="#createmodal" class="w-100 btn btn-primary btn-sm rounded-0 me-2" data-bs-toggle="modal">Enroll</a>
                             <button type="button" class="w-100 btn btn-outline-primary btn-sm rounded-0">Follow</button>
                         </div>
 
                         <div class="mb-5">
 
-                            <div class="row g-0 mb-2">
-                                <div class="col-auto">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="col ps-3">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div>Status</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div>{{$leave->stage['name']}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row g-0 mb-2">
-                                <div class="col-auto">
-                                    <i class="fas fa-file"></i>
-                                </div>
-                                <div class="col ps-3">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div>Status</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            {{-- <div>{{$leave["attstatus"]["name"]}}</div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             
                             <div class="row g-0 mb-2">
                                 <div class="col-auto">
@@ -77,10 +45,10 @@
                                 <div class="col ps-3">
                                     <div class="row">
                                         <div class="col">
-                                            <div>Authorize</div>
+                                            <div>By</div>
                                         </div>
                                         <div class="col-auto">
-                                            <div>{{$leave['user']['name']}}</div>
+                                            <div>{{$announcement['user']['name']}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +64,7 @@
                                             <div>Created</div>
                                         </div>
                                         <div class="col-auto">
-                                            <div>{{date('d M Y',strtotime($leave->created_at))}} | {{date('h:i:s A',strtotime($leave->created_at))}}</div>
+                                            <div>{{date('d M Y',strtotime($announcement->created_at))}} | {{date('h:i:s A',strtotime($announcement->created_at))}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -112,27 +80,12 @@
                                             <div>Updated</div>
                                         </div>
                                         <div class="col-auto">
-                                            <div>{{date('d M Y',strtotime($leave->updated_at))}} | {{date('h:i:s A',strtotime($leave->updated_at))}}</div>
+                                            <div>{{date('d M Y',strtotime($announcement->updated_at))}} | {{date('h:i:s A',strtotime($announcement->updated_at))}}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                        </div>
-
-
-                        <div class="mb-5">
-                            <p class="text-small text-muted text-uppercase mb-2">Class Day</p>
-                            
-                            {{-- @foreach($dayables as $dayable) --}}
-                                 <div class="row g-0 mb-2">
-                                    <div class="col-auto me-2">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                    {{-- <div class="col ">{{$dayable['name']}}</div> --}}
-                                </div>
-                            {{-- @endforeach --}}
-                            
                         </div>
 
 
@@ -177,44 +130,64 @@
 
             <div class="col-md-8 col-lg-9">  
 
+                <h6>Comments</h6>
+                <div class="card border-0 rounded-0 shadow mb-4">
+                    <div class="card-body d-flex flex-wrap gap-3">
+                        <div class="col-md-12">
+                            <div class="card rounded-0">
+                                <div class="card-body">
+                                    <ul class="list-group chat-boxs">
+                                        @foreach($comments as $comment)
+                                            <li class="list-group-item mt-2">
+                                                <div>
+                                                    <p>{{$comment->description}}</p>
+                                                </div>
+                                                <div>
+                                                    <span class="small fw-bold float-end">{{$comment->user['name']}} | {{$comment->created_at->diffForHumans()}}</span>
+                                                </div>
+                                                
+                                                
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <div class="card-body border-top">
+                                    <form action="{{route('comments.store')}}" method="POST">
+                                        @csrf
+        
+                                        <div class="col-md-12 d-flex justify-between">
+                                            <textarea name="description" id="description" class="form-control border-0 rounded-0" rows="1" style="resize:none;" placeholder="Comment here..." ></textarea>
+                                            <button type="submit" class="btn btn-info btn-sm text-light ms-3"><i class="fas fa-paper-plane"></i></button>
+                                        </div>
+                                        
+        
+                                        <!-- Start Hidden Fields -->
+                                        <input type="hidden" name="commentable_id" id="commentable_id" value="{{$announcement->id}}" />
+                                        <input type="hidden" name="commentable_type" id="commentable_type" value="App\Models\Announcement" />
+                                        <!-- End Hidden Fields -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <h6>Additional Info</h6>
                 <div class="card border-0 rounded-0 shadow mb-4">
                         <ul class="nav"> 
                             <li class="nav-item">
-                                <button type="button" id="autoclick" class="tablinks active" onclick="gettab(event,'follower')">Follower</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="tablinks" onclick="gettab(event,'following')">Following</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="tablinks" onclick="gettab(event,'liked')">Liked</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="tablinks" onclick="gettab(event,'remark')">Remark</button>
+                                <button type="button" id="autoclick" class="tablinks active" onclick="gettab(event,'content')">Follower</button>
                             </li>
                         </ul>
                 
                         <div class="tab-content">
                 
-                            <div id="follower" class="tab-panel">
-                                <h6>This is Home informations</h6>
-                                <p>{!! $leave->content !!}</p>
+                            <div id="content" class="tab-panel">
+                                <p>{!! $announcement->content !!}</p>
                             </div>
                 
-                            <div id="following" class="tab-panel">
-                                <h6>This is Profile informations</h6>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div>
-                
-                            <div id="liked" class="tab-panel">
-                                <h6>This is Contact informations</h6>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div>
-                
-                            <div id="remark" class="tab-panel">
-                                <p></p>
-                            </div>
+                            
                 
                         </div>
 
@@ -252,7 +225,7 @@
 
             <div class="modal-body">
 
-            <form action="{{route('enrolls.store')}}" method="leave" enctype="multipart/form-data">
+            <form action="{{route('enrolls.store')}}" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
 
                 <div class="row align-items-end">
@@ -272,7 +245,7 @@
                     </div>
 
                     <!-- Start Hidden Fields -->
-                    <input type="hidden" name="leave_id" value="{{$leave->id}}" />
+                    <input type="hidden" name="announcement_id" value="{{$announcement->id}}" />
                     <!-- End Hidden Fields -->
 
                 </div>

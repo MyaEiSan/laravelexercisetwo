@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementsController;
 use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CitiesControler;
@@ -13,6 +14,7 @@ use App\Http\Controllers\EnrollsController;
 use App\Http\Controllers\GendersControler;
 use App\Http\Controllers\LeavesController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\PostsLikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RelativesController;
 use App\Http\Controllers\RolesControler;
@@ -21,6 +23,7 @@ use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\StatusesController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\TypesController;
+use App\Http\Controllers\UsersFollowerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    
+    Route::resource('announcements',AnnouncementsController::class);
     Route::resource('attendances',AttendancesController::class);
 
     Route::resource('categories',CategoriesController::class);
@@ -68,8 +71,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('edulinks',EdulinksController::class);
     Route::resource('enrolls',EnrollsController::class);
     Route::resource('genders',GendersControler::class);
+
     Route::resource('leaves',LeavesController::class);
+    Route::get('notify/markasread',[LeavesController::class,'markasread'])->name('leaves.markasread');
+
     Route::resource('posts',PostsController::class);
+    Route::post('posts/{post}/like',[PostsLikeController::class,'like'])->name('post.like');
+    Route::post('posts/{post}/unlike',[PostsLikeController::class,'unlike'])->name('post.unlike');
 
     Route::resource('relatives',RelativesController::class);
     Route::get('/relativesstatus',[RelativesController::class,'typestatus']);
@@ -78,7 +86,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/rolesstatus',[RolesControler::class,'typestatus']);
 
     Route::resource('students',StudentsController::class);
-    
+    Route::post('compose/mailbox',[StudentsController::class,'mailbox'])->name('students.mailbox');
+
     Route::resource('stages',StagesController::class);
     Route::get('/stagesstatus',[StagesController::class,'typestatus']);
 
@@ -89,6 +98,10 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('types',TypesController::class);
     Route::get('/typesstatus',[Typescontroller::class,'typestatus']);
+
+    Route::post('users/{user}/follow',[UsersFollowerController::class,'follow'])->name('users.follow');
+    Route::post('users/{user}/unfollow',[UsersFollowerController::class,'unfollow'])->name('users.unfollow');
+
 }
 );
 

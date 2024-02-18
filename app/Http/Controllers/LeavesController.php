@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LeaveRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Leave;
 use App\Models\User;
-
+use App\Notifications\LeaveNotify;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 
 class LeavesController extends Controller
 {
@@ -26,7 +26,7 @@ class LeavesController extends Controller
     {
         $data['posts']= DB::table('posts')->where('attshow',3)->orderBy('title','asc')->get()->pluck('title','id');
         $data['tags'] = User::orderBy('name','asc')->get()->pluck('name','id');
-      
+        $data['gettoday'] = Carbon::today()->format('Y-m-d');//get today
         return view('leaves.create',$data);
     }
 
@@ -71,21 +71,35 @@ class LeavesController extends Controller
 
         session()->flash('success',"New Leave Created");
 
+        // $users = User::all();
+        $tagperson = $leave->tagperson()->get();
+
+        $studentid = $leave->student($user_id);
+
+        Notification::send($tagperson,new LeaveNotify($leave->id,$leave->title,$studentid));
+
         return redirect(route('leaves.index'));
     }
 
     
     public function show(string $id)
     {
+        $user = Auth::user();
+        $user_id = $user->id;
 
         $leave = Leave::findOrFail($id);
-        // dd($leave->checkenroll(1));
 
-        $dayables = $leave->days()->get();
-        // dd($dayables);
-        // $comments = Comment::where('commentable_id',$leave->id)->where('commentable_type','App\Models\Leave')->orderBy('created_at','desc')->get();
-        $comments = $leave->comments()->orderBy('updated_at','desc')->get();
-        return view('leaves.show',["leave"=>$leave,'dayables'=>$dayables,'comments'=>$comments]);
+        $type = "App\Notifications\LeaveNotify";
+        $getnoti = DB::table('notifications')
+                ->where('notifiable_id',$user_id)
+                ->where('type',$type)
+                ->where('data->id',$id)
+                ->pluck('id');
+
+        DB::table('notifications')->where('id',$getnoti)
+        ->update(['read_at'=>now()]);
+
+        return view('leaves.show',["leave"=>$leave]);
     }
 
     
@@ -159,6 +173,23 @@ class LeavesController extends Controller
         $leave->delete();
 
         session()->flash('success','Deleted Successfully');
+
+        return redirect()->back();
+    }
+
+    public function markasread(){
+
+        $user = Auth::user();
+        // $user->unreadNotifications->markAsRead();
+        // $user->notifications()->delete(); //all delete (r/un)
+
+        // $user = User::findOrFail($user->id);
+        // $user = User::findOrFail(auth()->user()->id);
+
+        foreach($user->unreadNotifications as $notification){
+            $notification->markAsRead();
+            // $notification->delete(); //all delete (un)
+        }
 
         return redirect()->back();
     }

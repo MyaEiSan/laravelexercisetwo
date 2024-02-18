@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Contact;
 use App\Models\Relative;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ContactEmailNotify;
 
 class ContactsController extends Controller
 {
@@ -53,6 +55,16 @@ class ContactsController extends Controller
         $contact->user_id = $user_id;
 
         $contact->save();
+        
+        $contactdata = [
+            "firstname" => $contact->firstname,
+            "lastname" => $contact->lastname,
+            "birthday" => $contact->birthday,
+            "relative" => $contact->relative["name"],
+            "url" => url("/")
+        ];
+
+        Notification::send($user,new ContactEmailNotify($contactdata));
 
         session()->flash('success','New Contact Created');
         return redirect(route('contacts.index'));
