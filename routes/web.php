@@ -13,6 +13,7 @@ use App\Http\Controllers\EdulinksController;
 use App\Http\Controllers\EnrollsController;
 use App\Http\Controllers\GendersControler;
 use App\Http\Controllers\LeavesController;
+use App\Http\Controllers\PaymentmethodsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\PostsLikeController;
 use App\Http\Controllers\ProfileController;
@@ -75,6 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('leaves',LeavesController::class);
     Route::get('notify/markasread',[LeavesController::class,'markasread'])->name('leaves.markasread');
 
+    Route::resource('paymentmethods',PaymentmethodsController::class);
+
     Route::resource('posts',PostsController::class);
     Route::post('posts/{post}/like',[PostsLikeController::class,'like'])->name('post.like');
     Route::post('posts/{post}/unlike',[PostsLikeController::class,'unlike'])->name('post.unlike');
@@ -96,8 +99,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('tags',TagsController::class);
     Route::get('/tagsstatus',[TagsController::class,'typestatus']);
     
-    Route::resource('types',TypesController::class);
+    Route::resource('types',TypesController::class)->except('destroy');
     Route::get('/typesstatus',[Typescontroller::class,'typestatus']);
+    Route::get('/typesdelete',[Typescontroller::class,'destroy'])->name('types.delete');
 
     Route::post('users/{user}/follow',[UsersFollowerController::class,'follow'])->name('users.follow');
     Route::post('users/{user}/unfollow',[UsersFollowerController::class,'unfollow'])->name('users.unfollow');

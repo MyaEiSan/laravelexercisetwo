@@ -92,13 +92,22 @@ class TypesController extends Controller
     }
 
     
-    public function destroy(string $id)
-    {
-        $role = Type::findOrFail($id);
+    // public function destroy(string $id)
+    // {
+    //     $type = Type::findOrFail($id);
             
-        $role->delete();
+    //     $type->delete();
 
-        return redirect()->back();
+    //     return redirect()->back();
+    // }
+
+    public function destroy(Request $request)
+    {
+        $type = Type::findOrFail($request['id']);  
+        $type->delete();
+
+        // session()->flash('info', 'Delete Successfully');
+        return response()->json(["success"=>"Delete Successfully."]);
     }
 
     public function typestatus(Request $request){ 

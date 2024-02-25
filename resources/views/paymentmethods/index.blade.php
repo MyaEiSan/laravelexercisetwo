@@ -1,12 +1,11 @@
 @extends('layouts.adminindex')
-@section('caption','Type List')
 <!--Start Content Area-->
 @section('content')
     {{-- Start Page Content  --}}
     <div class="container-fluid">
 
         <div class="col-md-12">
-            <form action="{{route('types.store')}}" method="POST">
+            <form action="{{route('paymentmethods.store')}}" method="POST">
                 {{csrf_field()}}
                 <div class="row align-items-end mb-3">
                     <div class="col-md-4 form-group">
@@ -52,25 +51,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach($types as $idx=>$type)
-                <tr>
+                @foreach($paymentmethods as $idx=>$paymentmethod)
+                <tr id="delete_{{$paymentmethod->id}}">
                         <td>{{++$idx}}</td>
-                        <td>{{$type->name}}</td>
+                        <td>{{$paymentmethod->name}}</td>
                        
                         <td>
                             <div class="form-checkbox form-switch">
-                                <input type="checkbox" class="form-check-input change-btn" {{$type->status_id === 3 ? 'checked':''}} data-id="{{$type->id}}"/>
+                                <input type="checkbox" class="form-check-input change-btn" {{$paymentmethod->status_id === 3 ? 'checked':''}} data-id="{{$paymentmethod->id}}"/>
                             </div>
                         </td>
-                        <td>{{$type->user['name']}}</td>
-                        <td>{{$type->created_at->format('d M Y')}}</td>
-                        <td>{{$type->updated_at->format('d M Y')}}</td>
+                        <td>{{$paymentmethod->user['name']}}</td>
+                        <td>{{$paymentmethod->created_at->format('d M Y')}}</td>
+                        <td>{{$paymentmethod->updated_at->format('d M Y')}}</td>
                         <td>
-                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$type->id}}" data-name="{{$type->name}}" data-status="{{$type->status_id}}"><i class="fas fa-pen"></i></a>
+                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$paymentmethod->id}}" data-name="{{$paymentmethod->name}}" data-status="{{$paymentmethod->status_id}}"><i class="fas fa-pen"></i></a>
                             {{-- <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a> --}}
-                            <a href="javascript:void(0);" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}" data-id="{{$type->id}}"><i class="fas fa-trash-alt"></i></a>
+                            <a href="javascript:void(0);" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}" data-id="{{$paymentmethod->id}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
-                        {{-- <form id="formdelete-{{$idx}}" action="{{route('types.destroy',$type->id)}}" method="POST">
+                        {{-- <form id="formdelete-{{$idx}}" action="{{route('paymentmethods.destroy',$type->id)}}" method="POST">
                             @csrf
                             @method('DELETE')
                         </form> --}}
@@ -142,7 +141,7 @@
             $("#editstatus_id").val($(this).data('status'));
 
             const getid = $(this).attr('data-id');
-            $("#formaction").attr('action',`/types/${getid}`);
+            $("#formaction").attr('action',`/paymentmethods/${getid}`);
 
             e.preventDefault();
         })
@@ -172,17 +171,18 @@
             if(confirm(`Are you sure !!! you want to delete  ${getidx}?`)){
                 
                 // just ui remove 
-                $(this).parent().parent().remove();
 
                 // data remove 
                 $.ajax({
-                    url: "typesdelete",
-                    type: "GET",
+                    url: `paymentmethods/${getid}`,
+                    type: "DELETE",
                     dataType: "json",
-                    data: {"id":getid},
+                    data:{_token:"{{csrf_token()}}"},
                     success:function(response){
-                        window.alert(response.success);
-                        // console.log(response);
+                        if(response && response.status === "success"){
+                            const getdata = response.data;
+                            $(`#delete_${getdata.id}`).remove();
+                        }
                     }
                 });
 
@@ -209,7 +209,7 @@
             // console.log(setstatus);
 
             $.ajax({
-                url: "typesstatus" ,
+                url: "paymentmethodsstatus" ,
                 type: "GET",
                 dataType: "json",
                 data: {"id":getid,"status_id": setstatus},
