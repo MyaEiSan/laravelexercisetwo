@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnnouncementsController;
+use App\Http\Controllers\AttcodegeneratorsController;
 use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CitiesControler;
@@ -19,6 +20,7 @@ use App\Http\Controllers\PostsLikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RelativesController;
 use App\Http\Controllers\RolesControler;
+use App\Http\Controllers\SocialapplicationsController;
 use App\Http\Controllers\StagesController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\StatusesController;
@@ -56,6 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('announcements',AnnouncementsController::class);
+
+    Route::resource('attcodegenerators',AttcodegeneratorsController::class);
+    Route::get('/attcodegeneratorsstatus', [AttcodegeneratorsController::class,'typestatus']);
+
     Route::resource('attendances',AttendancesController::class);
 
     Route::resource('categories',CategoriesController::class);
@@ -77,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::get('notify/markasread',[LeavesController::class,'markasread'])->name('leaves.markasread');
 
     Route::resource('paymentmethods',PaymentmethodsController::class);
+    Route::get('/paymentmethodsstatus', [PaymentmethodsController::class,'typestatus']);
 
     Route::resource('posts',PostsController::class);
     Route::post('posts/{post}/like',[PostsLikeController::class,'like'])->name('post.like');
@@ -90,6 +97,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('students',StudentsController::class);
     Route::post('compose/mailbox',[StudentsController::class,'mailbox'])->name('students.mailbox');
+
+    Route::resource('socialapplications',SocialapplicationsController::class);
+    Route::get('/socialapplicationsstatus',[SocialapplicationsController::class,'typestatus']);
+    Route::get('/socialapplicationsfetchalldata',[SocialapplicationsController::class,'fetchalldatas'])->name('socialapplications.fetchalldata');
 
     Route::resource('stages',StagesController::class);
     Route::get('/stagesstatus',[StagesController::class,'typestatus']);

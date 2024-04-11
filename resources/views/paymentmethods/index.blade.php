@@ -5,8 +5,7 @@
     <div class="container-fluid">
 
         <div class="col-md-12">
-            <form action="{{route('paymentmethods.store')}}" method="POST">
-                {{csrf_field()}}
+            <form id="createform">
                 <div class="row align-items-end mb-3">
                     <div class="col-md-4 form-group">
                         <label for="name">Name <span class="text-danger">*</span></label>
@@ -30,7 +29,7 @@
                     
                     <div class="col-md-4">
                         <button type="reset" class="btn btn-secondary btn-sm rounded-0">Cancel</button>
-                        <button type="submit" class="btn btn-primary btn-sm rounded-0">Submit</button>
+                        <button type="button" id="change-btn" class="btn btn-primary btn-sm rounded-0">Submit</button>
                     </div>
                 </div>
 
@@ -65,7 +64,7 @@
                         <td>{{$paymentmethod->created_at->format('d M Y')}}</td>
                         <td>{{$paymentmethod->updated_at->format('d M Y')}}</td>
                         <td>
-                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$paymentmethod->id}}" data-name="{{$paymentmethod->name}}" data-status="{{$paymentmethod->status_id}}"><i class="fas fa-pen"></i></a>
+                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#editmodal" data-id="{{$paymentmethod->id}}" data-name="{{$paymentmethod->name}}" data-status="{{$paymentmethod->status_id}}"><i class="fas fa-pen"></i></a>
                             {{-- <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a> --}}
                             <a href="javascript:void(0);" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}" data-id="{{$paymentmethod->id}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
@@ -84,7 +83,7 @@
 
     {{-- START MODAL AREA  --}}
     {{-- start edit modal  --}}
-    <div id="edit-modal" class="modal fade">
+    <div id="editmodal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-0">
                 <div class="modal-header">
@@ -129,7 +128,65 @@
 
 @section('scripts')
 <script>
+    
     $(document).ready(function(){
+
+        // Start Passing Header Token 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+            }
+        })
+        // End Passing Header Token 
+
+        // Start Create Form
+
+        $("#change-btn").click(function(e){
+            e.preventDefault();
+           
+            $.ajax({
+                url: "{{route('paymentmethods.store')}}", 
+                type: "POST", 
+                dataType: "json", 
+                // data: $("#createform").serialize(), 
+                data: $("#createform").serializeToArray(),
+                success:function(response){
+                    // console.log(response);
+                    // console.log(response.data);
+
+                    const data = response.data; 
+
+                    $("#type-table").prepend(
+                        `<tr id="${'delete_'+data.id}">
+                        <td>${data.id}</td>
+                        <td>${data.name}</td>
+                       
+                        <td>
+                            <div class="form-checkbox form-switch">
+                                <input type="checkbox" class="form-check-input change-btn" ${data.status_id === "3"?'checked':''} data-id="${data.id}"/>
+                            </div>
+                        </td>
+                        <td>${data.user_id}</td>
+                        <td>${data.created_at}</td>
+                        <td>${data.updated_at}</td>
+                        <td>
+                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#editmodal" data-id="${data.id}" data-name="${data.name}" data-status="${data.status_id}"><i class="fas fa-pen"></i></a>
+    
+                            <a href="javascript:void(0);" class="text-danger ms-2 delete-btns" data-idx="" data-id="${data.id}"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                
+                    </tr>
+                        `
+                    );
+                }, 
+                error: function(response){
+                    console.log("Error : ", response);
+                }
+            })
+        })
+
+        // End Create Form 
+        
 
         // Start Edit Form 
 
@@ -141,9 +198,32 @@
             $("#editstatus_id").val($(this).data('status'));
 
             const getid = $(this).attr('data-id');
-            $("#formaction").attr('action',`/paymentmethods/${getid}`);
+            $("#formaction").attr('data-id',getid);
 
+            
+        });
+
+        $('#formaction').submit(function(e){
             e.preventDefault();
+
+            const getid = $(this).attr('data-id');
+
+
+            $.ajax({
+                url: `paymentmethods/${getid}`,
+                type: "PUT",
+                dataType: "json",
+                data: $('#formaction').serialize(), // name=kpay&status=off
+                success: function(response){
+                    // console.log(response.status)
+                    // console.log(this.data); //// name=kpay&status=off
+                    $("#editmodal").modal('hide');
+
+                    window.location.reload(); //temp reload 
+
+                }
+            })
+
         })
 
         // End Edit Form 
@@ -177,7 +257,7 @@
                     url: `paymentmethods/${getid}`,
                     type: "DELETE",
                     dataType: "json",
-                    data:{_token:"{{csrf_token()}}"},
+                    // data:{_token:"{{csrf_token()}}"},
                     success:function(response){
                         if(response && response.status === "success"){
                             const getdata = response.data;

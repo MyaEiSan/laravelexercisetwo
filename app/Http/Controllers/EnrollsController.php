@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Enroll;
 use App\Models\Stage;
-
+use Exception;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class EnrollsController extends Controller
 {
@@ -75,18 +75,29 @@ class EnrollsController extends Controller
     public function update(Request $request, string $id)
     {
 
-        $this->validate($request,[
-            'stage_id' => 'required',
-            'remark' => 'nullable'
-        ]);
+        $user = Auth::user();
+        $user_id = $user->id; 
 
-        $enroll = Enroll::findOrFail($id);
-        $enroll->stage_id = $request['stage_id'];
-        $enroll->remark = $request['remark'];
+        try{
 
-        $enroll->save();
+            $enroll = Enroll::findOrFail($id);
+            $enroll->stage_id = $request['editstage_id'];
+            $enroll->remark = $request['remark'];
+            $enroll->save();
 
-        return redirect(route('enrolls.index'));
+            if($enroll){
+                return response()->json(['status'=>'success','data'=>$enroll]);
+            }
+
+            return response()->json(['status'=>'failed','message'=>'Failed to update']);
+
+           
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
+
+
     }
 
     

@@ -135,6 +135,7 @@
 <!--End Content Area-->
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function(){
 
@@ -188,7 +189,12 @@
                 data: {"id":getid,"status_id": setstatus},
                 success: function(response){
                     // console.log(response);
-                    console.log(response.success);
+                    // console.log(response.success);
+                    Swal.fire({
+                        title: "Updated!",
+                        text: "Updated Successfully!",
+                        icon: "success"
+                    });
                 }
             });
         });

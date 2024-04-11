@@ -65,8 +65,8 @@
                 @foreach($attendances as $idx=>$attendance)
                 <tr>
                         <td>{{++$idx}}</td>
-                        <td>{{$attendance->student->regnumber}}</td>
-                        <td>{{$attendance->post->title}}</td>
+                        <td><a href="{{route('students.show',$attendance->studenturl())}}">{{$attendance->student->regnumber}}</a></td>
+                        <td><a href="{{route('posts.show',$attendance->post_id)}}">{{$attendance->post->title}}</a></td>
                        
                         <td>{{$attendance->attcode}}</td>
                         <td>{{$attendance->user['name']}}</td>

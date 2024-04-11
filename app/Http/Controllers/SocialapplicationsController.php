@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Paymentmethod;
+use App\Models\Socialapplication;
 use Illuminate\Http\Request;
 use App\Models\Status;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 
-class PaymentmethodsController extends Controller
+class SocialapplicationsController extends Controller
 {
     public function index()
     {
-        $paymentmethods = Paymentmethod::all();
+        $socialapplications = Socialapplication::all();
         $statuses = Status::whereIn('id',[3,4])->get();
-        return view('paymentmethods.index',compact('paymentmethods','statuses'));
+        return view('socialapplications.index',compact('socialapplications','statuses'));
     }
 
     public function create()
@@ -42,16 +43,16 @@ class PaymentmethodsController extends Controller
 
         try{
             
-            $paymentmethod = new Paymentmethod();
-            $paymentmethod->name = $request['name'];
-            $paymentmethod->slug = Str::slug($request['name']);
-            $paymentmethod->status_id = $request['status_id'];
-            $paymentmethod->user_id = $user->id;
+            $socialapplication = new Socialapplication();
+            $socialapplication->name = $request['name'];
+            $socialapplication->slug = Str::slug($request['name']);
+            $socialapplication->status_id = $request['status_id'];
+            $socialapplication->user_id = $user->id;
 
-            $paymentmethod->save();
+            $socialapplication->save();
 
-            if($paymentmethod){
-                return response()->json(["status"=>"success","data"=>$paymentmethod]);
+            if($socialapplication){
+                return response()->json(["status"=>"success","data"=>$socialapplication]);
             }
         }catch(Exception $e){
             Log::error($e->getMessage());
@@ -63,17 +64,15 @@ class PaymentmethodsController extends Controller
     
     public function show(string $id)
     {
-        $paymentmethod = Paymentmethod::findOrFail($id);
-        return view('paymentme$paymentmethods.show',["paymentme$paymentmethod"=>$paymentmethod]);
+        $socialapplication = Socialapplication::findOrFail($id);
+        return view('paymentmemethods.show',["socialapplication"=>$socialapplication]);
     }
 
     
     public function edit(string $id)
     {
-        $paymentmethod = Paymentmethod::findOrFail($id);
-        $statuses = Status::whereIn('id',[3,4])->get();
-
-        return view('paymentmethods.edit')->with("paymentmethod",$paymentmethod)->with('statuses',$statuses);
+        $socialapplication = Socialapplication::findOrFail($id);
+        return response()->json($socialapplication);
     }
 
     public function update(Request $request, string $id)
@@ -91,20 +90,20 @@ class PaymentmethodsController extends Controller
 
         try{
             
-            $paymentmethod = Paymentmethod::findOrFail($id);
-            $paymentmethod->name = $request['name'];
-            $paymentmethod->slug = Str::slug($request['name']);
-            $paymentmethod->status_id = $request['status_id'];
-            $paymentmethod->user_id = $user->id;
+            $socialapplication = Socialapplication::findOrFail($id);
+            $socialapplication->name = $request['name'];
+            $socialapplication->slug = Str::slug($request['name']);
+            $socialapplication->status_id = $request['status_id'];
+            $socialapplication->user_id = $user->id;
 
 
-            $paymentmethod->save();
+            $socialapplication->save();
 
-            if($paymentmethod){
-                return response()->json(['status'=>'success','message'=>$paymentmethod]);
+            if($socialapplication){
+                return response()->json(['status'=>'success','message'=>$socialapplication,'data'=>$socialapplication]);
             }
 
-            return response()->json(['status'=>'failed','message'=>'Failed to update Payment Method']);
+            return response()->json(['status'=>'failed','message'=>'Failed to update application']);
         }catch(Exception $e){
             Log::error($e->getMessage());
             return response()->json(['status'=>'success','message'=>$e->getMessage()]);
@@ -114,25 +113,12 @@ class PaymentmethodsController extends Controller
         return redirect(route('paymentmethods.index'));
     }
 
-    
-    // public function destroy(string $id)
-    // {
-    //     $type = Type::findOrFail($id);
-            
-    //     $type->delete();
-
-    //     return redirect()->back();
-    // }
-
-    public function destroy(Paymentmethod $paymentmethod)
+    public function destroy(string $id)
     {
         try{
-            if($paymentmethod){
-                $paymentmethod->delete();
-                return response()->json(["status"=>"success","data"=>$paymentmethod,"message"=>"Delete Successfully"]);
-            }
 
-            return response()->json(["status"=>"failed","message"=>"No Data Found"]);
+            $socialapplication = Socialapplication::where('id',$id)->delete();
+            return Response::json($socialapplication);
             
         }catch(Exception $e){
             Log::error($e->getMessage());
@@ -142,10 +128,21 @@ class PaymentmethodsController extends Controller
 
     public function typestatus(Request $request){ 
 
-        $type = Paymentmethod::findOrFail($request['id']);
+        $type = Socialapplication::findOrFail($request['id']);
         $type->status_id = $request['status_id'];
         $type->save();
 
         return response()->json(["success"=>'Status Change Successfully.']);
+    }
+
+    public function fetchalldatas()
+    {
+        try{
+            $socialapplications = Socialapplication::all();
+        return response()->json(["status"=>"status","data"=>$socialapplications]);
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
+        }
     }
 }

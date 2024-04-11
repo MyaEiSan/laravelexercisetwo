@@ -29,4 +29,12 @@ class Attendance extends Model
     public function student(){
         return $this->belongsTo(Student::class,'user_id');
     }
+
+    public function studenturl(){
+        return Student::where('user_id',$this->user_id)->get(['students.id'])->first();
+    }
+
+    public function checkattcode($classdate,$postid,$attcode){
+        
+    }
 }

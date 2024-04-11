@@ -60,6 +60,8 @@
                         <td>{{$enroll->created_at->format('d M Y')}}</td>
                         <td>{{$enroll->updated_at->format('d M Y')}}</td>
                         <td>
+                            <a href="javascript:void(0);" class="text-primary quickform" data-bs-toggle="modal" data-bs-target="#quickmodal" data-id="{{$enroll->id}}" data-remark="{{$enroll->remark}}" data-stageid="{{$enroll->stage_id}}"><i class="fas fa-user-check"></i></a>
+
                             <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$enroll->id}}" data-remark="{{$enroll->remark}}" data-stageid="{{$enroll->stage_id}}"><i class="fas fa-pen"></i></a>
                         </td>
                     </tr>
@@ -110,8 +112,47 @@
             </div>
         </div>
     </div>
-{{-- end edit modal  --}}
-{{-- END MODAL AREA  --}}
+    {{-- end edit modal  --}}
+    {{-- start quick modal  --}}
+    <div id="quickmodal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h6 class="modal-title">Edit Form</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="quickformaction" action="" method="POST">
+                        {{csrf_field()}}
+                        {{method_field('PUT')}}
+                        <div class="row align-items-end">                          
+                            <div class="col-md-3 form-group">
+                                <label for="editstage_id">Stage <span class="text-danger">*</span></label>
+                                <select name="editstage_id" id="editstage_id" class="form-control form-control-sm rounded-0">
+                                    @foreach($stages as $stage)
+                                        <option value="{{$stage->id}}">{{$stage->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-7 form-group">
+                                <label for="editremark">Remark <span class="text-danger">*</span></label>
+                                <input type="text" name="remark" id="editremark" class="form-control form-control-sm rounded-0" value="{{old('remark')}}" /> 
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                            </div>
+                        </div>
+        
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end quick modal  --}}
+    {{-- END MODAL AREA  --}}
 
 @endsection
 <!--End Content Area-->
@@ -120,22 +161,66 @@
 <script>
     $(document).ready(function(){
 
+        $.ajaxSetup({
+            headers:{
+                'X-CSRF-TOKEN':$("meta[name='csrf-token']").attr('content')
+            }
+        });
+
         // Start Edit Form 
 
-        $(document).on('click','.editform',function(e){
+        // $(document).on('click','.editform',function(e){
+            
+        //     // console.log($(this).attr('data-id'),$(this).data('name'));
+            
+        //     $("#edit_remark").val($(this).attr('data-remark'));
+        //     $("#edit_stage_id").val($(this).data('stageid'));
+
+        //     const getid = $(this).attr('data-id');
+        //     $("#formaction").attr('action',`/enrolls/${getid}`);
+
+        //     e.preventDefault();
+        // })
+
+         // End Edit Form 
+
+          // Start Quick Form 
+        $(document).on('click','.quickform',function(e){
             
             // console.log($(this).attr('data-id'),$(this).data('name'));
             
-            $("#edit_remark").val($(this).attr('data-remark'));
-            $("#edit_stage_id").val($(this).data('stageid'));
+            $("#editremark").val($(this).attr('data-remark'));
+            $("#editstage_id").val($(this).data('stageid'));
 
             const getid = $(this).attr('data-id');
-            $("#formaction").attr('action',`/enrolls/${getid}`);
+            // console.log(getid);
 
-            e.preventDefault();
+            $("#quickformaction").attr('data-id',getid);
+            console.log($("#quickformaction").attr('data-id'));
         })
 
-        // End Edit Form 
+        // End Quick Form 
+
+        $("#quickformaction").submit(function(e){
+            e.preventDefault();
+            
+            const getid = $(this).attr('data-id');
+
+            $.ajax({
+                url: `enrolls/${getid}` ,
+                type: "PUT", 
+                dataType: 'json', 
+                data: $(this).serialize(), 
+                success: function(response){
+                    if(response && response.status === "success"){
+                        console.log(response);
+                        console.log(this.data);
+                        $("#quickmodal").modal('hide');
+                        console.log('i');
+                    }
+                }
+            })
+        })
 
         // Start Delete Item
 

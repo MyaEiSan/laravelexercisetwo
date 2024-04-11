@@ -59,6 +59,7 @@
                                 </ul>
     
                             </li>
+                            <li class="nav-item"><a href="{{route('attcodegenerators.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-file-alt fa-md me-3"></i>All Generator</a></li>
                             <li class="nav-item"><a href="{{route('students.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-file-alt fa-md me-3"></i>All Students</a></li>
                             <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-file-alt fa-md me-3"></i>Popus</a></li>
 
@@ -98,6 +99,7 @@
                                     <li><a href="{{route('paymentmethods.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Payment Method</a></li>
                                     <li><a href="{{route('relatives.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Relatives</a></li>
                                     <li><a href="{{route('roles.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Roles</a></li>
+                                    <li><a href="{{route('socialapplications.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Social App</a></li>
                                 </ul>
     
                             </li>
