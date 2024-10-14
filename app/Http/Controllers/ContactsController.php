@@ -9,6 +9,8 @@ use App\Models\Contact;
 use App\Models\Relative;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ContactEmailNotify;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ContactsController extends Controller
 {
@@ -125,5 +127,19 @@ class ContactsController extends Controller
 
         session()->flash('info','Delete Successfully');
         return redirect(route('contacts.index'));
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $contact = Contact::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }

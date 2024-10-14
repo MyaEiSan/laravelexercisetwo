@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Models\Status;
-
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class CategoriesController extends Controller
 {
@@ -111,5 +112,19 @@ class CategoriesController extends Controller
         $category->save();
 
         return response()->json(["success"=>'Status Change Successfully.']);
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $category = Category::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }

@@ -46,6 +46,14 @@
                                 </ul>
     
                             </li>
+                            <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks" data-bs-toggle="collapse" data-bs-target="#basicui"><i class="fas fa-file-alt fa-md me-3"></i> Leads <i class="fas fa-angle-left mores"></i></a>
+                            
+                                <ul id="basicui" class="collapse ps-2">
+                                    <li><a href="{{route('leads.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Lead</a></li>
+                                    
+                                </ul>
+    
+                            </li>
 
                             <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks" data-bs-toggle="collapse" data-bs-target="#advanceui"><i class="fas fa-users-group fa-md me-3"></i>Students <i class="fas fa-angle-left mores"></i></a>
                             
@@ -61,7 +69,7 @@
                             </li>
                             <li class="nav-item"><a href="{{route('attcodegenerators.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-file-alt fa-md me-3"></i>All Generator</a></li>
                             <li class="nav-item"><a href="{{route('students.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-file-alt fa-md me-3"></i>All Students</a></li>
-                            <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-file-alt fa-md me-3"></i>Popus</a></li>
+                           
 
                             <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks" data-bs-toggle="collapse" data-bs-target="#iconelement"><i class="fas fa-share-alt-square fa-md me-3"></i>Apps <i class="fas fa-angle-left mores"></i></a>
                             
@@ -73,16 +81,34 @@
                                 </ul>
     
                             </li>
+                             
+                            <li class="nav-item"><a href="{{route('pointtransfers.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-exchange-alt fa-md me-3"></i>Transfer</a></li>
+
+                            <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks" data-bs-toggle="collapse" data-bs-target="#shopping"><i class="fas fa-shopping-cart fa-md me-3"></i>Shopping <i class="fas fa-angle-left mores"></i></a>
+                            
+                                <ul id="shopping" class="collapse ps-2">
+                                    <li><a href="{{route('contacts.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>Plans</a></li>
+                                    <li><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>Billing</a></li>
+                                    <li><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>Payment</a></li>
+                                    
+                                </ul>
+    
+                            </li>
+
+                           
 
                             <li class="nav-item nav-categories">Data Representation</li>
 
                             <li class="nav-item"><a href="javascript:void(0);" class="nav-link text-white p-3 mb-2 sidebarlinks" data-bs-toggle="collapse" data-bs-target="#chartelement"><i class="fas fa-file-alt fa-md me-3"></i>Fixed Analysis <i class="fas fa-angle-left mores"></i></a>
                             
                                 <ul id="chartelement" class="collapse ps-2">
+                                    <li><a href="{{route('countries.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Country</a></li>
                                     <li><a href="{{route('days.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Days</a></li>
                                     <li><a href="{{route('categories.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Categories</a></li>
                                     <li><a href="{{route('stages.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Stages</a></li>
                                     <li><a href="{{route('genders.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Gender</a></li>
+                                    <li><a href="{{route('userpoints.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Points</a></li>
+                                    <li><a href="{{route('paymenttypes.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Payment Type</a></li>
                                     <li><a href="{{route('statuses.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Status</a></li>
                                     <li><a href="{{route('tags.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Tags</a></li>
                                     <li><a href="{{route('types.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Types</a></li>
@@ -95,11 +121,11 @@
                             
                                 <ul id="tableelement" class="collapse ps-2">
                                     <li><a href="{{route('cities.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> City</a></li>
-                                    <li><a href="{{route('countries.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Country</a></li>
                                     <li><a href="{{route('paymentmethods.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Payment Method</a></li>
                                     <li><a href="{{route('relatives.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Relatives</a></li>
                                     <li><a href="{{route('roles.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Roles</a></li>
                                     <li><a href="{{route('socialapplications.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i> Social App</a></li>
+                                    <li><a href="{{route('warehouses.index')}}" class="nav-link text-white p-3 mb-2 sidebarlinks"><i class="fas fa-long-arrow-alt-right me-4"></i>Warehouses</a></li>
                                 </ul>
     
                             </li>

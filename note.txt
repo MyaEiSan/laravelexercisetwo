@@ -1,0 +1,45 @@
+=>Pusher 
+
+reload မဖြစ်ပဲ auto ပြောင်းဖို့ pusher web socket ကို သုံးရတာ 
+QUEUE_CONNECTION=sync  ဖြစ်ဖို့ လိုအပ်တယ်။ 
+
+PUSHER_APP_CLUSTER=ap1 
+Note::ap1 is based on broadcasting option that you selected when create app in pusher site
+
+BROADCAST_DRIVER = pusher
+
+in broadcasting.php
+
+'default' => env('BROADCAST_DRIVER', 'pusher'),
+
+
+
+=>To create event 
+php artisan make:event ChatUpdate 
+
+Note:: event must implements ShouldBroadcast
+
+Event ထဲမှာ broadcastAs() ထည့်ထားရင် 
+
+channel bind တဲ့အခါ event ကို တိုက်ရိုက်ခေါ်လို့မရဘူး ဥပမာ 
+channel.bind('App\\Events\\PostLiveViewerEvent', function(data) {
+    document.getElementById('liveviewer').textContent = data.count;
+});
+
+အထပ်ပါအတိုင်း ခေါ်လို့မရဘူး 
+
+channel.bind('postliveviewer-event', function(data) {
+    document.getElementById('liveviewer').textContent = data.count;
+});
+
+အခုလို broadcastAs မှာပေးထားတဲ့ event name နဲ့ပဲ ခေါ်လို့ရမယ် 
+
+Event ထဲမှာ broadcastAs() မထည့်ထားရင် 
+channel.bind('App\\Events\\PostLiveViewerEvent', function(data) {
+    document.getElementById('liveviewer').textContent = data.count;
+}); 
+
+ခေါ်လို့ရတယ်။ 
+
+
+

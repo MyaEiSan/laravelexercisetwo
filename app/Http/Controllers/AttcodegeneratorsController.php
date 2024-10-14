@@ -7,9 +7,11 @@ use App\Models\Post;
 use App\Models\Attcodegenerator;
 use App\Models\Status;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AttcodegeneratorsController extends Controller
 {
@@ -90,4 +92,19 @@ class AttcodegeneratorsController extends Controller
 
         return response()->json(["success"=>'Status Change Successfully.']);
     }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $attcodegenerator = Attcodegenerator::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
+    }
+
 }

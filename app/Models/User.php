@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -72,7 +72,28 @@ class User extends Authenticatable
         // Note:: $followingid mean = Other Person 
     }
 
+    public function scopeOnlineusers($query){
+        return $this->where('is_online',1)->get();
+    }
+
+    public function scopeOfflineusers($query){
+        return $this->where('is_online',0)->get();
+    }
 
 
-    
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+
+    public function userpoint(){
+        return $this->hasOne(UserPoint::class);
+    }
+
+    public function lead(){
+        return $this->hasOne(Lead::class);
+    }
+
+    public function student(){
+        return $this->hasOne(Student::class);
+    }
 }

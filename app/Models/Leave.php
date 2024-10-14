@@ -39,6 +39,10 @@ class Leave extends Model
         return $this->belongsTo(Stage::class);
     }
 
+    public function leavefiles(){
+        return $this->hasMany(LeaveFile::class);
+    }
+
     public function student($userid){
         $students = Student::where('user_id',$userid)->get()->pluck('regnumber');
         foreach($students as $student){

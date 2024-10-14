@@ -8,9 +8,15 @@
         <div class="col-md-12">
             <a href="#createmodal" class="btn btn-primary btn-sm rounded-0" data-bs-toggle="modal">Create</a>
             <hr/>
+            <div>
+                <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger btn-sm rounded-0 mb-2">Bulk Delete</a>
+            </div>
             <table id="category-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
+                        <th>
+                            <input type="checkbox" name="selectalls[]" id="selectalls"  class="form-check-input selectalls"/>
+                        </th>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Status</th>
@@ -22,7 +28,10 @@
                 </thead>
                 <tbody>
                 @foreach($categories as $idx=>$category)
-                <tr>
+                <tr id="delete_{{$category->id}}">
+                        <td>
+                            <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="{{$category->id}}" />
+                        </td>
                         <td>{{++$idx}}</td>
                         <td>{{$category->name}}</td>
                        
@@ -135,6 +144,7 @@
 <!--End Content Area-->
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function(){
 
@@ -189,12 +199,76 @@
                 data: {"id":getid,"status_id": setstatus},
                 success: function(response){
                     // console.log(response);
-                    console.log(response.success);
+                    Swal.fire({
+                        title: "Updated!",
+                        text: "Updated Successfully!",
+                        icon: "success"
+                    });
                 }
             });
         });
 
         // End change-btn 
+
+        // Start Bulk Delete 
+        $("#selectalls").click(function(){
+                $(".singlechecks").prop('checked',$(this).prop('checked'));
+            });
+
+            $("#bulkdelete-btn").click(function(){
+
+                let getselectedids = []; 
+
+                // console.log($("input:checkbox[name='singlechecks']:checked"));
+
+                $("input:checkbox[name='singlechecks']:checked").each(function(){
+                    getselectedids.push($(this).val());
+                })
+
+                Swal.fire({
+                title: "Are you sure?",
+                text: `You won't be able to revert!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+
+                     // data remove 
+                    $.ajax({
+                        url:'{{route("categories.bulkdeletes")}}',
+                        type: "DELETE",
+                        dataType: "json",
+                        data:{
+                                selectedids: getselectedids, 
+                                _token: '{{csrf_token()}}'
+                            },
+                        success:function(response){
+                            // console.log(response);
+                            if(response){
+                                $.each(getselectedids,function(key,value){
+                                    $(`#delete_${value}`).remove();
+                                });
+                                
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "Your file has been deleted.",
+                                    icon: "success"
+                                });
+                            }
+                        }, 
+                        error:function(){
+                            console.log("Error : ", response);
+                        }
+                    });
+                }
+                });
+
+
+            });
+        // End Bulk Delete 
 
     })
 </script>

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Stage;
 use App\Models\Status;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class StagesController extends Controller
 {
@@ -119,5 +121,19 @@ class StagesController extends Controller
         $stage->save();
 
         return response()->json(["success"=>'Status Change Successfully.']);
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $stage = Stage::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }

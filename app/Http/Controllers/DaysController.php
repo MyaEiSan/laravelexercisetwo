@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Day;
 use App\Models\Status;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class DaysController extends Controller
 {
@@ -114,6 +116,20 @@ class DaysController extends Controller
         $day->save();
 
         return response()->json(["success"=>'Status Change Successfully.']);
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $day = Day::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }
 

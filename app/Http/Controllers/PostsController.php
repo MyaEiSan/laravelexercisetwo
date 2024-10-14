@@ -7,12 +7,15 @@ use App\Models\Comment;
 use App\Models\Day;
 use App\Models\DayAble;
 use App\Models\Post;
+use App\Models\PostViewDuration;
 use App\Models\Status;
 use App\Models\Tag;
 use App\Models\Type;
+use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class PostsController extends Controller
 {
@@ -142,7 +145,12 @@ class PostsController extends Controller
         // dd($dayables);
         // $comments = Comment::where('commentable_id',$post->id)->where('commentable_type','App\Models\Post')->orderBy('created_at','desc')->get();
         $comments = $post->comments()->orderBy('updated_at','desc')->get();
-        return view('posts.show',["post"=>$post,'dayables'=>$dayables,'comments'=>$comments]);
+
+        $user_id = Auth::user()->id;
+
+        $viewers = $post->postViewDurations()->whereNot('user_id',$user_id)->orderBy('id','desc')->take(10)->get();
+        
+        return view('posts.show',["post"=>$post,'dayables'=>$dayables,'comments'=>$comments,'viewers'=>$viewers]);
     }
 
     
@@ -302,4 +310,19 @@ class PostsController extends Controller
 
         return redirect()->back();
     }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $warehouse = Post::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
+    }
+
 }

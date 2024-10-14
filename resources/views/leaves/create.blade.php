@@ -12,7 +12,7 @@
                         <div class="row">
                             <div class="col-md-12 form-group mb-5">
                                 <label for="image" class="gallery">Choose Images</label>
-                                <input type="file" name="image" id="image"  class="form-control form-control-sm rounded-0" value="{{old('image')}}" hidden /> 
+                                <input type="file" name="images[]" id="image"  class="form-control form-control-sm rounded-0" value="{{old('image')}}" hidden multiple /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="startdate">Start Date <span class="text-danger">*</span></label>
@@ -132,15 +132,17 @@
 						$(output).removeClass("removetxt");
 					}
 
+                    $(output).html('');
+
 					for(var i = 0; i< totalfiles; i++){
 						var filereader = new FileReader();
+                        filereader.readAsDataURL(input.files[i]);
 
 						filereader.onload = function(e){
-                            $(output).html('');
 							$($.parseHTML("<img/>")).attr("src",e.target.result).appendTo(output);
 						}
 
-						filereader.readAsDataURL(input.files[i]);
+						
 					}
 				}
 			};

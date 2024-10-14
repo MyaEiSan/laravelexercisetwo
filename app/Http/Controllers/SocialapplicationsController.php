@@ -145,4 +145,18 @@ class SocialapplicationsController extends Controller
             return response()->json(["status"=>"failed","message"=>$e->getMessage()]);
         }
     }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $socialapplication = Socialapplication::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
+    }
 }

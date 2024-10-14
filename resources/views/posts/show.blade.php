@@ -160,16 +160,24 @@
                             
                             <div class="row g-0 mb-2">
                                 <div class="col-auto me-2">
-                                    <i class="fas fa-info"></i>
+                                    <i class="fas fa-hand-pointer"></i>
                                 </div>
-                                <div class="col ">Sample Data</div>
+                                <div class="col">
+                                    @php 
+                                        $getpageurl = url()->current(); 
+                                        $pageview = \App\Models\PageView::where('pageurl',$getpageurl)->first()->counter;
+                                    @endphp 
+                                    Viewed {{ $pageview }} times
+                                </div>
                             </div>
 
                             <div class="row g-0 mb-2">
                                 <div class="col-auto me-2">
-                                    <i class="fas fa-info"></i>
+                                    <i class="fas fa-eye"></i>
                                 </div>
-                                <div class="col ">Sample Data</div>
+                                <div class="col ">
+                                    <span id="liveviewer">0</span> users watching 
+                                </div>
                             </div>
 
                             <div class="row g-0 mb-2">
@@ -270,7 +278,24 @@
                             </div>
                 
                             <div id="remark" class="tab-panel">
-                                <p></p>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>User</th>
+                                            <th>Duration</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        @foreach($viewers as $key=>$viewer)
+                                        <tr>
+                                            <td>{{ $key+1}}</td>
+                                            <th>{{ $viewer->user->name}}</th>
+                                            <td>{{ $viewer->duration }} sec</td>
+                                            <td>{{ $viewer->created_at->format('d M Y h:m A') }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </thead>
+                                </table>
                             </div>
                 
                         </div>
@@ -292,6 +317,12 @@
 
 
 	<!-- End Page Content Area -->
+
+    {{-- Start Hidden Area  --}}
+
+    <input type="hidden" id="setpostid" data-id="{{$post->id}}" />
+
+    {{-- End Hidden Area  --}}
 
 
     <!-- START MODAL AREA  -->
@@ -462,6 +493,101 @@
 
         document.getElementById('autoclick').click();
         // End Tab Box
+
+        // Start Pusher Post Live Viewer 
+
+            // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+
+            var pusher = new Pusher('1a4a951918c078cb4994', {
+            cluster: 'ap1'
+            });
+
+            function mainchannel(postid){
+                var channel = pusher.subscribe('postliveviewer-channel_'+postid);
+                
+                // global event binding
+
+                // channel.bind('postliveviewer-event', function(data) {
+                //     document.getElementById('liveviewer').textContent = data.count;
+                // });
+
+                // or
+
+                channel.bind('App\\Events\\PostLiveViewerEvent', function(data) {
+                    document.getElementById('liveviewer').textContent = data.count;
+                });
+            }
+
+            function incrementviewer(postid){
+                $.ajax({
+                    url: `/postliveviewersinc/${postid}`, 
+                    type: 'POST', 
+                    data:{
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    }, 
+                    success: function(response){
+                        console.log('Increment Status = ', response);
+                    }
+                });
+            }
+
+            function decrementviewer(postid){
+                $.ajax({
+                    url: `/postliveviewersdec/${postid}`, 
+                    type: 'POST', 
+                    data:{
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    }, 
+                    success: function(response){
+                        console.log('Decrement Status = ', response);
+                    }
+                });
+            }
+
+            window.addEventListener('DOMContentLoaded',function(){
+                // console.log('i am loaded');
+                const getpostid = document.getElementById('setpostid').getAttribute('data-id'); 
+
+                incrementviewer(getpostid); 
+                mainchannel(getpostid);
+            });
+
+            // window.addEventListener('beforeunload', function(){
+            //     // console.log('i am unloaded');
+
+            //     const getpostid = document.getElementById('setpostid').getAttribute('data-id'); 
+
+            //     decrementviewer(getpostid);
+            //     mainchannel(getpostid);
+            // });
+
+        // End Pusher Post Live Viewer 
+
+        // beforeunload = working in reload 
+
+        // Start Post View Duration
+        
+        $(window).on('beforeunload',function(){
+
+            const exittime = new Date().toISOString();
+            console.log(exittime); //2024-06-08T13:06:50.380Z 
+
+            $.ajax({
+                url: '/trackdurations', 
+                method:'POST', 
+                data: {
+                    exittime:exittime, 
+                    _token: '{{ csrf_token() }}'
+                }, 
+                success: function(response){
+                    console.log(response);
+                }
+            })
+
+        })
+
+        // End Post View Duration 
     
     </script>
 @endsection

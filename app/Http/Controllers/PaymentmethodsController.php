@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Paymentmethod;
+use App\Models\Paymenttype;
 use Illuminate\Http\Request;
 use App\Models\Status;
 use Exception;
@@ -15,8 +16,9 @@ class PaymentmethodsController extends Controller
     public function index()
     {
         $paymentmethods = Paymentmethod::all();
+        $paymenttypes = Paymenttype::where('status_id',3)->get();
         $statuses = Status::whereIn('id',[3,4])->get();
-        return view('paymentmethods.index',compact('paymentmethods','statuses'));
+        return view('paymentmethods.index',compact('paymentmethods','statuses','paymenttypes'));
     }
 
     public function create()
@@ -31,6 +33,7 @@ class PaymentmethodsController extends Controller
 
         $this->validate($request,[
             'name' => 'required|max:50|unique:types,name',
+            'paymenttype_id' => 'required',
             'status_id' => 'required|in:3,4'
         ],[
             'name.required' => 'Name is required',
@@ -45,10 +48,13 @@ class PaymentmethodsController extends Controller
             $paymentmethod = new Paymentmethod();
             $paymentmethod->name = $request['name'];
             $paymentmethod->slug = Str::slug($request['name']);
+            $paymentmethod->paymenttype_id = $request['paymenttype_id'];
             $paymentmethod->status_id = $request['status_id'];
             $paymentmethod->user_id = $user->id;
 
             $paymentmethod->save();
+
+            $paymentmethod = $paymentmethod->load('paymenttype','user');
 
             if($paymentmethod){
                 return response()->json(["status"=>"success","data"=>$paymentmethod]);
@@ -79,8 +85,9 @@ class PaymentmethodsController extends Controller
     public function update(Request $request, string $id)
     {
         $this->validate($request,[
-            'name' => ['required','max:50','unique:types,name,'.$id],
-            'status_id' => ['required','in:3,4']
+            'editname' => ['required','max:50','unique:paymentmethods,name,'.$id],
+            'editpaymenttype_id' => 'required',
+            'editstatus_id' => ['required','in:3,4']
         ],[
             'name.required' => 'Name is required',
             'status_id.required' => 'Status is required'
@@ -92,16 +99,19 @@ class PaymentmethodsController extends Controller
         try{
             
             $paymentmethod = Paymentmethod::findOrFail($id);
-            $paymentmethod->name = $request['name'];
-            $paymentmethod->slug = Str::slug($request['name']);
-            $paymentmethod->status_id = $request['status_id'];
+            $paymentmethod->name = $request['editname'];
+            $paymentmethod->slug = Str::slug($request['editname']);
+            $paymentmethod->paymenttype_id = $request['editpaymenttype_id'];
+            $paymentmethod->status_id = $request['editstatus_id'];
             $paymentmethod->user_id = $user->id;
 
 
             $paymentmethod->save();
 
+            $paymentmethod = $paymentmethod->load('paymenttype','user');
+
             if($paymentmethod){
-                return response()->json(['status'=>'success','message'=>$paymentmethod]);
+                return response()->json(['status'=>'success','data'=>$paymentmethod]);
             }
 
             return response()->json(['status'=>'failed','message'=>'Failed to update Payment Method']);
@@ -147,5 +157,19 @@ class PaymentmethodsController extends Controller
         $type->save();
 
         return response()->json(["success"=>'Status Change Successfully.']);
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $paymentmethod = Paymentmethod::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }

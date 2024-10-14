@@ -8,10 +8,17 @@
            <a href="javascript:void(0);" id="modal-btn" class="btn btn-primary btn-sm rounded-0">Create</a>
         </div>
 
+        <div class="mt-3">
+            <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger btn-sm rounded-0 mb-2">Bulk Delete</a>
+        </div>
+
         <div class="col-md-12">
             <table id="mytable" class="table table-sm table-hover border">
                 <thead>
                     <tr>
+                        <th>
+                            <input type="checkbox" name="selectalls[]" id="selectalls"  class="form-check-input selectalls"/>
+                        </th>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Status</th>
@@ -123,6 +130,9 @@
                     datas.forEach(function(data){
                         html += `
                                 <tr id="delete_${data.id}">
+                                    <td>
+                                        <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="${data.id}" />
+                                    </td>
                                     <td>${data.id}</td>
                                     <td>${data.name}</td>
                                 
@@ -205,6 +215,9 @@
 
                                 let html = `
                                 <tr id="delete_${data.id}">
+                                    <td>
+                                        <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="${data.id}" />
+                                    </td>
                                     <td>${data.id}</td>
                                     <td>${data.name}</td>
                                 
@@ -253,6 +266,9 @@
 
                                 let html = `
                                 <tr id="delete_${data.id}">
+                                    <td>
+                                        <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="${data.id}" />
+                                    </td>
                                     <td>${data.id}</td>
                                     <td>${data.name}</td>
                                 
@@ -392,6 +408,66 @@
         });
 
         // End change-btn 
+
+        // Start Bulk Delete 
+        $("#selectalls").click(function(){
+                $(".singlechecks").prop('checked',$(this).prop('checked'));
+            });
+
+            $("#bulkdelete-btn").click(function(){
+
+                let getselectedids = []; 
+
+                // console.log($("input:checkbox[name='singlechecks']:checked"));
+
+                $("input:checkbox[name='singlechecks']:checked").each(function(){
+                    getselectedids.push($(this).val());
+                })
+
+                Swal.fire({
+                title: "Are you sure?",
+                text: `You won't be able to revert!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+
+                     // data remove 
+                    $.ajax({
+                        url:'{{route("socialapplications.bulkdeletes")}}',
+                        type: "DELETE",
+                        dataType: "json",
+                        data:{
+                                selectedids: getselectedids, 
+                                _token: '{{csrf_token()}}'
+                            },
+                        success:function(response){
+                            // console.log(response);
+                            if(response){
+                                $.each(getselectedids,function(key,value){
+                                    $(`#delete_${value}`).remove();
+                                });
+                                
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "Your file has been deleted.",
+                                    icon: "success"
+                                });
+                            }
+                        }, 
+                        error:function(){
+                            console.log("Error : ", response);
+                        }
+                    });
+                }
+                });
+
+
+            });
+        // End Bulk Delete 
 
     })
 </script>

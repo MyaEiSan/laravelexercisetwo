@@ -36,6 +36,10 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            \App\Http\Middleware\PageViewMid::class,
+            \App\Http\Middleware\PostViewDurationMid::class,
+            \App\Http\Middleware\OnOffUserStatusMid::class
         ],
 
         'api' => [
@@ -64,5 +68,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        'validate.subscription' => \App\Http\Middleware\ValidateSubscriptionMid::class, 
+        'check.registration.step' => \App\Http\Middleware\CheckRegistrationStepMid::class,
+        'autologout' => \App\Http\Middleware\AutoLogoutMid::class
     ];
 }

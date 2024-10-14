@@ -15,12 +15,18 @@ class Paymentmethod extends Model
         'image',
         'name',
         'slug',
+        'paymenttype_id',
         'status_id',
         'user_id'
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+
+    public function paymenttype(){
+        return $this->belongsTo(Paymenttype::class);
     }
 
     public function status(){

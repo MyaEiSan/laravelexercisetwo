@@ -45,11 +45,16 @@
 
             </form>
         </div>
-
+        <div>
+            <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger btn-sm rounded-0 mb-2">Bulk Delete</a>
+        </div>
         <div class="col-md-12">
             <table id="attendedform-table" class="table table-sm table-hover border">
                 <thead>
                     <tr>
+                        <td>
+                            <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="${data.id}" />
+                        </td>
                         <th>No</th>
                         <th>Student ID</th>
                         <th>CLass</th>
@@ -63,7 +68,10 @@
                 </thead>
                 <tbody>
                 @foreach($attendances as $idx=>$attendance)
-                <tr>
+                <tr id="delete_{{$attendance->id}}">
+                        <td>
+                            <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="{{$attendance->id}}" />
+                        </td>
                         <td>{{++$idx}}</td>
                         <td><a href="{{route('students.show',$attendance->studenturl())}}">{{$attendance->student->regnumber}}</a></td>
                         <td><a href="{{route('posts.show',$attendance->post_id)}}">{{$attendance->post->title}}</a></td>
@@ -173,6 +181,66 @@
         // End Delete Item 
 
         $("#attendedform-table").DataTable();
+
+        // Start Bulk Delete 
+        $("#selectalls").click(function(){
+                $(".singlechecks").prop('checked',$(this).prop('checked'));
+            });
+
+            $("#bulkdelete-btn").click(function(){
+
+                let getselectedids = []; 
+
+                // console.log($("input:checkbox[name='singlechecks']:checked"));
+
+                $("input:checkbox[name='singlechecks']:checked").each(function(){
+                    getselectedids.push($(this).val());
+                })
+
+                Swal.fire({
+                title: "Are you sure?",
+                text: `You won't be able to revert!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+
+                     // data remove 
+                    $.ajax({
+                        url:'{{route("attendances.bulkdeletes")}}',
+                        type: "DELETE",
+                        dataType: "json",
+                        data:{
+                                selectedids: getselectedids, 
+                                _token: '{{csrf_token()}}'
+                            },
+                        success:function(response){
+                            // console.log(response);
+                            if(response){
+                                $.each(getselectedids,function(key,value){
+                                    $(`#delete_${value}`).remove();
+                                });
+                                
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "Your file has been deleted.",
+                                    icon: "success"
+                                });
+                            }
+                        }, 
+                        error:function(){
+                            console.log("Error : ", response);
+                        }
+                    });
+                }
+                });
+
+
+            });
+        // End Bulk Delete 
 
     })
 </script>

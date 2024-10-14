@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Country;
+use App\Models\Status;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use PHPUnit\Framework\Constraint\Count;
 
-class CountriesControler extends Controller
+class CountriesController extends Controller
 {
     public function index()
     {
@@ -20,8 +24,10 @@ class CountriesControler extends Controller
             }
         })->orderBy('id','asc')->paginate(10);
         // dd($countries);
+
+        $statuses = Status::whereIn('id',[3,4])->get();
         
-        return view('countries.index',compact('countries'));
+        return view('countries.index',compact('countries','statuses'));
     }
 
   
@@ -45,6 +51,7 @@ class CountriesControler extends Controller
         $country = new Country();
         $country->name = $request['name'];
         $country->slug = Str::slug($request['name']);
+        $country->status_id = $request['status_id'];
         $country->user_id = $user->id;
         $country->save();
 
@@ -72,17 +79,18 @@ class CountriesControler extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'name' => 'required|unique:countries,name,'.$id
+            'editname' => 'required|unique:countries,name,'.$id
         ],[
-            'name.required' => 'Country name is required'
+            'editname.required' => 'Country name is required'
         ]);
 
         $user = Auth::user();
         $user_id = $user['id'];
 
         $country = Country::findOrFail($id);
-        $country->name = $request['name'];
-        $country->slug = Str::slug($request['name']);
+        $country->name = $request['editname'];
+        $country->slug = Str::slug($request['editname']);
+        $country->status_id = $request['editstatus_id'];
         $country->user_id = $user->id;
         $country->save();
 
@@ -101,5 +109,27 @@ class CountriesControler extends Controller
         $country->delete();
 
         return redirect()->back();
+    }
+
+    public function typestatus(Request $request){
+        $country = Country::findOrFail($request['id']);
+        $country->status_id = $request['status_id'];
+        $country->save();
+
+        return response()->json(["success"=>'Status Change Successfully.']);
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $country = Country::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }

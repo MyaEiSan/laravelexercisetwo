@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\City;
+use App\Models\Country;
+use App\Models\Status;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CitiesControler extends Controller
@@ -17,7 +21,12 @@ class CitiesControler extends Controller
                 $query->where('name','LIKE','%'.$getname.'%');
             }
         })->orderBy('id','asc')->paginate(10);
-        return view('cities.index',compact('cities'));
+
+        $countries = Country::where('status_id',3)->orderBy('name','asc')->get();
+        
+        $statuses = Status::whereIn('id',[3,4])->get();
+
+        return view('cities.index',compact('cities','countries','statuses'));
     }
 
   
@@ -61,7 +70,9 @@ class CitiesControler extends Controller
      */
     public function edit($id)
     {
-        //
+        $city = City::findOrFail($id); 
+
+        return response()->json($city);
     }
 
     
@@ -97,5 +108,19 @@ class CitiesControler extends Controller
         $city->delete();
 
         return redirect()->back();
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $city = City::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
     }
 }

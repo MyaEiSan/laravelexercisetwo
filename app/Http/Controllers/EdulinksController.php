@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Edulink;
 use App\Models\Post;
+use Exception;
+use Illuminate\Support\Facades\Log;
+
 class EdulinksController extends Controller
 {
     public function index()
@@ -142,5 +145,25 @@ class EdulinksController extends Controller
 
         session()->flash('success','Delete Successfully!!');
         return redirect(route('edulinks.index'));
+    }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $edulinks = Edulink::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
+    }
+
+    public function download($id){
+        $edulink = Edulink::findOrFail($id);
+        $edulink->increment('counter'); 
+        return redirect($edulink->url);
     }
 }

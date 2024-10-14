@@ -6,7 +6,9 @@
         <div class="col-md-12">
 
             <a href="{{route('leaves.create')}}" class="btn btn-primary btn-sm rounded-0">Create</a>
-
+            <div class="mt-3">
+                <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger btn-sm rounded-0 mb-2">Bulk Delete</a>
+            </div>
             <div class="col-md-12">
                 <form action="" method="">
                     <div class="row justify-content-end">
@@ -34,6 +36,9 @@
             <table id="mytable" class="table table-sm table-hover border">
                 <thead>
                     <tr>
+                        <th>
+                            <input type="checkbox" name="selectalls[]" id="selectalls"  class="form-check-input selectalls"/>
+                        </th>
                         <th>No</th>
                         <th>Student ID</th>
                         <th>Class</th>
@@ -49,12 +54,14 @@
                 </thead>
                 <tbody>
                 @foreach($leaves as $idx=>$leave)
-                <tr>
+                <tr id="delete_{{$leave->id}}">
+                        <td>
+                            <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="{{$leave->id}}" />
+                        </td>
                         <td>{{$idx + $leaves->firstItem()}}</td>
                         <td><a href="{{route('students.show',$leave->studenturl())}}">{{$leave->student($leave->user_id)}}</a></td>
                         <td><a href="{{route('posts.show',$leave->post_id)}}">{{$leave->post['title']}}</a></td>
                         <td>{{$leave->startdate}}</td>
-                        <td>{{$leave->enddate}}</td>
                         <td>{{$leave->enddate}}</td>
                         <td>{{$leave->tagperson['name']}}</td>
                         <td>{{$leave->stage['name']}}</td>
@@ -152,6 +159,66 @@
         // for mytable 
         // let table = new DataTable('#mytable');
         // $("#mytable").DataTable();
+
+        // Start Bulk Delete 
+        $("#selectalls").click(function(){
+                $(".singlechecks").prop('checked',$(this).prop('checked'));
+            });
+
+            $("#bulkdelete-btn").click(function(){
+
+                let getselectedids = []; 
+
+                // console.log($("input:checkbox[name='singlechecks']:checked"));
+
+                $("input:checkbox[name='singlechecks']:checked").each(function(){
+                    getselectedids.push($(this).val());
+                })
+
+                Swal.fire({
+                title: "Are you sure?",
+                text: `You won't be able to revert!`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+
+                     // data remove 
+                    $.ajax({
+                        url:'{{route("leaves.bulkdeletes")}}',
+                        type: "DELETE",
+                        dataType: "json",
+                        data:{
+                                selectedids: getselectedids, 
+                                _token: '{{csrf_token()}}'
+                            },
+                        success:function(response){
+                            // console.log(response);
+                            if(response){
+                                $.each(getselectedids,function(key,value){
+                                    $(`#delete_${value}`).remove();
+                                });
+                                
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "Your file has been deleted.",
+                                    icon: "success"
+                                });
+                            }
+                        }, 
+                        error:function(){
+                            console.log("Error : ", response);
+                        }
+                    });
+                }
+                });
+
+
+            });
+        // End Bulk Delete 
 
     });
 </script>

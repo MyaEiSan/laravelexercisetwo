@@ -6,10 +6,13 @@ use App\Models\Announcement;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Notifications\AnnouncementNotify;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use PgSql\Lob;
 
 class AnnouncementsController extends Controller
 {
@@ -161,4 +164,19 @@ class AnnouncementsController extends Controller
 
         return redirect()->back();
     }
+
+    public function bulkdeletes(Request $request){
+        try{
+
+            $getselectedids = $request->selectedids;
+            $announcement = Announcement::whereIn('id',$getselectedids)->delete();
+
+            return response()->json(['success'=>'Selected data have been deleted successfully.']);
+
+        }catch(Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['status'=>'failed','message'=>$e->getMessage()]);
+        }
+    }
+
 }

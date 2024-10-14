@@ -31,9 +31,9 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => env('SESSION_LIFETIME', 120),# The session will expire after 120 minutes of inactivity 
 
-    'expire_on_close' => false,
+    'expire_on_close' => false, // keep the session alive even if the user closed the browser 
 
     /*
     |--------------------------------------------------------------------------

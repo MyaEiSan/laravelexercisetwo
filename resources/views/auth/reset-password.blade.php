@@ -1,39 +1,44 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
-
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@include('layouts.auth.authheader')
+<div id="app">
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="col-3 bg-white p-4">
+            <h5>New Password</h5>
+           <div class="row">
+                
+                <form class="mt-3" action="{{route('password.store')}}" method="POST">
+                    @csrf 
+                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                    <div class="form-group mb-3">
+                        <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{old('email')}}" autofocus />
+                        @error('email')
+                            <span class="invalid-feedback">
+                                <strong>{{$message}}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" value="{{old('password')}}" autofocus />
+                        @error('password')
+                            <span class="invalid-feedback">
+                                <strong>{{$message}}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirm Password" value="{{old('password_confirmation')}}" autofocus />
+                        @error('password_confirmation')
+                            <span class="invalid-feedback">
+                                <strong>{{$message}}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-info rounded-0">Reset Password</button>
+                    </div>
+                </form>
+           </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</div>
+@include('layouts.auth.authfooter')
