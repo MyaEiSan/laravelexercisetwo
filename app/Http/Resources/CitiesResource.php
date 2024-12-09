@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Country;
+use App\Models\Region;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,12 +22,12 @@ class CitiesResource extends JsonResource
             'id'=>$this->id,
             'name'=>$this->name, 
             'slug'=>$this->slug, 
-            'country_id'=>$this->country_id, 
+            'region_id'=>$this->region_id, 
             'status_id'=>$this->status_id,
             'user_id'=>$this->user_id,
             'created_at'=>$this->created_at->format("d m Y"),
             'updated_at'=>$this->updated_at->format("d m Y"),
-            'country' => Country::where('id',$this->country_id)->select(['id','name'])->first(),
+            'region' => Region::where('id',$this->region_id)->select(['id','name'])->first(),
             'status' => Status::where('id',$this->status_id)->select(['id','name'])->first(),
             'user' => User::where('id',$this->user_id)->select(['id','name'])->first()
             ];

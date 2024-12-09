@@ -18,6 +18,7 @@ class LeadsController extends Controller
    
     public function index()
     {
+        $this->authorize('view', Lead::class);
         $leads = Lead::all();
         return view('leads.index',compact('leads'));
     }
@@ -25,6 +26,7 @@ class LeadsController extends Controller
    
     public function create()
     {
+        $this->authorize('create', Lead::class);
         $genders = Gender::orderBy('name','asc')->get();
         $countries = Country::orderBy('name','asc')->where('status_id',3)->get(); 
         return view('leads.create',compact('genders','countries'));

@@ -5,33 +5,35 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Region;
 use App\Models\Status;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-class CitiesControler extends Controller
+class CitiesController extends Controller
 {
     public function index()
     {
-
+        $this->authorize('view',City::class);
         $cities = City::where(function($query){
             if($getname = request('filtername')){
                 $query->where('name','LIKE','%'.$getname.'%');
             }
         })->orderBy('id','asc')->paginate(10);
 
-        $countries = Country::where('status_id',3)->orderBy('name','asc')->get();
+        $regions = Region::where('status_id',3)->orderBy('name','asc')->get();
         
         $statuses = Status::whereIn('id',[3,4])->get();
 
-        return view('cities.index',compact('cities','countries','statuses'));
+        return view('cities.index',compact('cities','regions','statuses'));
     }
 
   
     public function create()
     {
+        $this->authorize('create',City::class);
         return view('cities.create');
     }
 
@@ -70,6 +72,7 @@ class CitiesControler extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('edit', City::class);
         $city = City::findOrFail($id); 
 
         return response()->json($city);
@@ -89,6 +92,7 @@ class CitiesControler extends Controller
 
         $city = City::findOrFail($id);
         $city->name = $request['name'];
+        $city->region_id = $request['editregion_id'];
         $city->slug = Str::slug($request['name']);
         $city->user_id = $user->id;
         $city->save();

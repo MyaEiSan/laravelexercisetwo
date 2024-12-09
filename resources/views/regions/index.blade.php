@@ -14,18 +14,8 @@
                         <label for="country_id">Country <span class="text-danger">*</span></label>
                         <select name="country_id" id="country_id" class="form-control form-control-sm rounded-0 country_id">
                             @foreach($countries as $country)
-                                <option value="{{$country['id']}}">{{$country['name']}}</option>
+                                <option value="{{$country['id']}}" {{old('country_id') == $country['id']?'selected':''}}>{{$country['name']}}</option>
                             @endforeach
-                        </select>
-                    </div>
-
-
-                    <div class="col-md-3 form-group mb-3">
-                        <label for="city_id">City <span class="text-danger">*</span></label>
-                        <select name="city_id" id="city_id" class="form-control form-control-sm rounded-0 city_id">
-                            {{-- @foreach($cities as $city)
-                                <option value="{{$city['id']}}">{{$city['name']}}</option>
-                            @endforeach --}}
                         </select>
                     </div>
 
@@ -41,7 +31,7 @@
                         <label for="status_id">Status <span class="text-danger">*</span></label>
                         <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                             @foreach($statuses as $status)
-                                <option value="{{$status['id']}}">{{$status['name']}}</option>
+                                <option value="{{$status['id']}}" {{old('status_id') == $status['id']?'selected':''}}>{{$status['name']}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -89,7 +79,6 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Country</th>
-                        <th>City</th>
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -107,7 +96,6 @@
                         <td>{{$idx + $regions->firstItem()}}</td>
                         <td>{{$region->name}}</td>
                         <td>{{$region->country->name}}</td>
-                        <td>{{$region->city->name}}</td>
                         <td>
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input change-btn" {{ $region->status_id === 3 ? 'checked':'' }} data-id="{{$region->id}}" />
@@ -117,8 +105,8 @@
                         <td>{{$region->created_at->format('d M Y')}}</td>
                         <td>{{$region->updated_at->format('d M Y')}}</td>
                         <td>
-                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$region->id}}" data-name="{{$region->name}}" data-country="{{$region->country_id}}" data-city="{{$region->city_id}}" data-status="{{$region->status_id}}"><i class="fas fa-pen"></i>Edit</a>
-                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i>Delete</a>
+                            <a href="javascript:void(0);" class="text-info editform" data-bs-toggle="modal" data-bs-target="#edit-modal" data-id="{{$region->id}}" data-name="{{$region->name}}" data-country="{{$region->country_id}}" data-city="{{$region->city_id}}" data-status="{{$region->status_id}}"><i class="fas fa-pen"></i></a>
+                            <a href="#" class="text-danger ms-2 delete-btns" data-idx="{{$idx}}"><i class="fas fa-trash-alt"></i></a>
                         </td>
                         <form id="formdelete-{{$idx}}" action="{{route('regions.destroy',$region->id)}}" method="POST">
                             @csrf
@@ -157,16 +145,6 @@
                                     <select name="editcountry_id" id="editcountry_id" class="form-control form-control-sm rounded-0 country_id">
                                         @foreach($countries as $country)
                                             <option value="{{$country['id']}}">{{$country['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-            
-            
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="editcity_id">City <span class="text-danger">*</span></label>
-                                    <select name="editcity_id" id="editcity_id" class="form-control form-control-sm rounded-0 city_id">
-                                        @foreach($cities as $city)
-                                            <option value="{{$city['id']}}">{{$city['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>

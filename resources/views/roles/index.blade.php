@@ -54,7 +54,7 @@
                                 <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="{{$role->id}}" />
                             </td>
                             <td>{{$idx + $roles->firstItem()}}</td>
-                            <td><img src="{{asset($role->image)}}" class="rounded-circle" alt="{{$role->name}}" width="20" height="20"/> <a href="{{route('roles.show',$role->id)}}">{{$role->name}}</a></td>
+                            <td><img src="{{asset($role->image)}}" class="rounded-circle" alt="{{$role->name}}" width="20" height="20"/> <a href="{{route('roles.show',$role->slug)}}">{{$role->name}}</a></td>
                     
                             <td>
                                 <div class="form-check form-switch">

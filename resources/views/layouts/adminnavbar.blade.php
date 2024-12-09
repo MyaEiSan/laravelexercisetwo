@@ -73,7 +73,7 @@
                         <img src="{{asset($userdata->student['image'])}}" class="rounded-circle" alt="{{$userdata->name}}" width="25" />
                     </a>
                     <div class="dropdown-menu">
-                        <a href="javascript:void(0);" class="dropdown-item"><i class="fas fa-user fa-sm me-2 text-muted"></i>Profile</a>
+                        <a href="{{route('profile.edit')}}" class="dropdown-item"><i class="fas fa-user fa-sm me-2 text-muted"></i>Profile</a>
                         <a href="javascript:void(0);" class="dropdown-item"><i class="fas fa-cogs fa-sm me-2 text-muted"></i>Settings</a>
                         <a href="javascript:void(0);" class="dropdown-item"><i class="fas fa-list fa-sm me-2 text-muted"></i>Activity Log</a>
                         <div class="dropdown-divider"></div>

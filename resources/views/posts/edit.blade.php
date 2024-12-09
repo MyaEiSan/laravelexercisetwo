@@ -5,7 +5,7 @@
     {{-- Start Page Content  --}}
     <div class="container-fluid">
         <div class="col-md-12">
-            <form action="/posts/{{$post->id}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('posts.update',$post->id)}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -53,7 +53,7 @@
                             <div class="col-md-12 form-group">
                                 <label>Days</label>
                                 <div class="d-flex flex-wrap">
-                                    @foreach ($days as $idx=>$day )
+                                    {{-- @foreach ($days as $idx=>$day )
                                     <div class="form-check form-switch mx-3">
                                         <input type="checkbox" name="day_id[]" id="day_id{{$day->id}}" class="form-check-input dayactions" value="{{$day->id}}" 
 
@@ -62,6 +62,15 @@
                                                 checked
                                             @endif
                                         @endforeach
+                                        
+                                        /><label for="day_id{{$day->id}}">{{$day->name}}</label>
+                                    </div>
+                                    @endforeach --}}
+                                    @foreach ($days as $idx=>$day )
+                                    <div class="form-check form-switch mx-3">
+                                        <input type="checkbox" name="day_id[]" id="day_id{{$day->id}}" class="form-check-input dayactions" value="{{$day->id}}" 
+
+                                       {{in_array($day->id,$post->days->pluck('id')->toArray())?'checked':''}}
                                         
                                         /><label for="day_id{{$day->id}}">{{$day->name}}</label>
                                     </div>

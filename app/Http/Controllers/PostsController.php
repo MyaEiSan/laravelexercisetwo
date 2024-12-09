@@ -11,6 +11,7 @@ use App\Models\PostViewDuration;
 use App\Models\Status;
 use App\Models\Tag;
 use App\Models\Type;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -21,29 +22,34 @@ class PostsController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Post::class);
         $posts = Post::all();
         return view('posts.index',compact('posts'));
     }
 
     public function create()
     {
+        $this->authorize('create', Post::class);
         $attshows = Status::whereIn('id',[3,4])->get();
         $days = Day::where('status_id',3)->get();
         $statuses = Status::whereIn('id',[7,10,11])->get();
         $tags = Tag::where('status_id',3)->get();
         $types = Type::whereIn('id',[1,2])->get();
-        return view('posts.create',compact('attshows','days','statuses','tags','types'));
+        $gettoday = Carbon::now()->format('Y-m-d');
+        $gettime = Carbon::now()->format('H:i');
+
+        return view('posts.create',compact('attshows','days','statuses','tags','types','gettoday','gettime'));
     }
 
     
     public function store(Request $request)
     {
-
+        $this->authorize('create', Post::class);
         $this->validate($request,[
             'image' => 'image|mimes:jpg,jpeg,png|max:1024',
             'title' => 'required|max:300|unique:posts',
             'content' => 'required',
-            'fee' => 'required',
+            'fee' => 'required|numeric',
             'startdate' => 'required',
             'enddate' => 'required',
             'starttime' => 'required',
@@ -51,7 +57,9 @@ class PostsController extends Controller
             'type_id' => 'required|in:1,2',
             'tag_id' => 'required',
             'attshow' => 'required|in:3,4',
-            'status_id' => 'required|in:7,10,11'
+            'status_id' => 'required|in:7,10,11',
+            'day_id' => 'required|array',
+            'day_id.*' => 'exists:days,id'
         ],[
             'title.required' => 'Title is required',
             'content.required' => 'Content is required',
@@ -70,18 +78,11 @@ class PostsController extends Controller
         $user_id = $user['id'];
 
         $post = new Post();
-        $post->title = $request['title'];
+        $post->fill($request->only([
+            'title','content','fee','startdate','enddate','starttime','endtime','type_id','tag_id','attshow','status_id'
+        ]));
+
         $post->slug = Str::slug($request['tilte']);
-        $post->content = $request['content'];
-        $post->fee = $request['fee'];
-        $post->startdate = $request['startdate'];
-        $post->enddate = $request['enddate'];
-        $post->starttime = $request['starttime'];
-        $post->endtime = $request['endtime'];
-        $post->type_id = $request['type_id'];
-        $post->tag_id = $request['tag_id'];
-        $post->attshow = $request['attshow'];
-        $post->status_id = $request['status_id'];
         $post->user_id = $user->id;
 
         // Single Image Upload 
@@ -114,19 +115,32 @@ class PostsController extends Controller
             // }
 
             // Method 2
-            if(count($request['day_id']) > 0){
-                foreach($request['day_id'] as $key=>$value){
+            // if(count($request['day_id']) > 0){
+            //     foreach($request['day_id'] as $key=>$value){
 
-                    $day = [
-                        // 'day_id' => $request['day_id'][$key],
-                        'day_id' => $value,
-                        'dayable_id'=>$post->id,
-                        'dayable_type' =>$request['dayable_type'] 
-                    ];
+            //         $day = [
+            //             // 'day_id' => $request['day_id'][$key],
+            //             'day_id' => $value,
+            //             'dayable_id'=>$post->id,
+            //             'dayable_type' =>$request['dayable_type'] 
+            //         ];
 
-                    Dayable::insert($day);
-                }
-            }
+            //         Dayable::insert($day);
+            //     }
+            // }
+
+
+            //    Method 3
+            $day = array_map(function($dayid)use($post,$request){
+                return [
+                    'day_id' => $dayid,
+                    'dayable_id'=>$post->id,
+                    'dayable_type' => $request['dayable_type'] // or you can use Post::class
+                ];
+            },$request->day_id);
+            Dayable::insert($day);
+            
+            
         }
         
         session()->flash('success','New Post Created');
@@ -135,14 +149,11 @@ class PostsController extends Controller
     }
 
     
-    public function show(string $id)
+    public function show(Post $post)
     {
-
-        $post = Post::findOrFail($id);
-        // dd($post->checkenroll(1));
+        $this->authorize('view', $post);
 
         $dayables = $post->days()->get();
-        // dd($dayables);
         // $comments = Comment::where('commentable_id',$post->id)->where('commentable_type','App\Models\Post')->orderBy('created_at','desc')->get();
         $comments = $post->comments()->orderBy('updated_at','desc')->get();
 
@@ -152,12 +163,11 @@ class PostsController extends Controller
         
         return view('posts.show',["post"=>$post,'dayables'=>$dayables,'comments'=>$comments,'viewers'=>$viewers]);
     }
-
     
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        
-        $post = Post::findOrFail($id);
+        $this->authorize('edit', $post);
+        // $post = Post::findOrFail($id);
         $attshows = Status::whereIn('id',[3,4])->get();
         $days = Day::where('status_id',3)->get();
         $dayables = $post->days()->get();
@@ -169,12 +179,13 @@ class PostsController extends Controller
         return view('posts.edit')->with("post",$post)->with('attshows',$attshows)->with('days',$days)->with('dayables',$dayables)->with('statuses',$statuses)->with('tags',$tags)->with('types',$types);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
         
         $this->validate($request,[
             'image' => 'image|mimes:jpg,jpeg,png|max:1024',
-            'title' => 'required|max:300|unique:posts,title,'.$id,
+            'title' => 'required|max:300|unique:posts,title,'.$post->id,
             'content' => 'required',
             'fee' => 'required',
             'startdate' => 'required',
@@ -202,7 +213,7 @@ class PostsController extends Controller
         $user = Auth::user();
         $user_id = $user['id'];
 
-        $post = Post::findOrFail($id);
+        // $post = Post::findOrFail($id);
         $post->title = $request['title'];
         $post->slug = Str::slug($request['tilte']);
         $post->content = $request['content'];
@@ -240,63 +251,18 @@ class PostsController extends Controller
 
         $post->save();
 
-        // Method 1 
-        if($post->id){
-            if(isset($request['day_id'])){
-                $post->days()->sync($request['day_id']);
-            }else{
-                $dayable =Dayable::where('dayable_id',$post['id'])
-                ->where('dayable_type',$request['dayable_type']);
-                $dayable->delete();
-            }
-        }
+        // Update Days
+        $post->days()->sync($request['day_id']); 
 
-        // Start Day Action 
-    //    if(isset($request['newday_id'])){
-
-    //         // remove all days 
-    //         foreach($request['newday_id'] as $key=>$value){
-    //             $dayable =Dayable::where('dayable_id',$post['id'])
-    //                         ->where('dayable_type',$request['dayable_type']);
-    //             $dayable->delete();
-    //         }
-
-    //         // add renewday 
-    //         foreach($request['newday_id'] as $key=>$value){
-    //             $renewday = [
-    //                 'day_id' => $request['newday_id'][$key],
-    //                 'dayable_id' => $post['id'],
-    //                 'dayable_type' => $request['dayable_type']
-    //             ];
-    //             Dayable::insert($renewday);
-    //         }
-    //    }elseif(isset($request['day_id'])){
-
-    //         $dayable =Dayable::where('dayable_id',$post['id'])
-    //                         ->where('dayable_type',$request['dayable_type']);
-    //         $dayable->delete();
-
-    //         foreach($request['newday_id'] as $key=>$value){
-    //             $renewday = [
-    //                 'day_id' => $request['newday_id'][$key],
-    //                 'dayable_id' => $post['id'],
-    //                 'dayable_type' => $request['dayable_type']
-    //             ];
-    //             Dayable::insert($renewday);
-    //         }
-            
-    //    }else{
-
-    //    }
-        // End Day Action 
-
+        session()->flash('success','Update Successfully');
         return redirect(route('posts.index'));
     }
 
     
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($id);
+        $this->authorize('delete', $post);
+        // $post = Post::findOrFail($id);
             
         // Remove Old Image 
 

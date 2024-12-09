@@ -16,6 +16,7 @@ class RegionsController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Region::class);
         $regions = Region::where(function($query){
             if($getname = request('filtername')){
                 $query->where('name','LIKE','%'.$getname.'%');
@@ -23,15 +24,15 @@ class RegionsController extends Controller
         })->paginate(15);
 
         $countries = Country::orderBy('name','asc')->where('status_id',3)->get();
-        $cities = City::orderBy('name','asc')->where('status_id',3)->get();
         $statuses = Status::whereIn('id',[3,4])->get();
 
-        return view('regions.index',compact('regions','countries','cities','statuses'));
+        return view('regions.index',compact('regions','countries','statuses'));
     }
 
   
     public function create()
     {
+        $this->authorize('create', Region::class);
         return view('regions.create');
     }
 
@@ -39,20 +40,17 @@ class RegionsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'name' => 'required|unique:countries,name',
+            'name' => 'required|unique:regions,name',
             'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id', 
             'status_id' => 'required'
         ],[
             'name.required' => 'Region name is required',
             'country_id.required' => 'Country is required', 
-            'city_id.required' => 'City is required'
         ]);
 
         $region = new Region();
         $region->name = $request['name'];
         $region->country_id = $request['country_id'];
-        $region->city_id = $request['city_id'];
         $region->status_id = $request['status_id'];
         $region->user_id = auth()->user()->id;
         $region->save();
@@ -80,10 +78,10 @@ class RegionsController extends Controller
     
     public function update(Request $request, $id)
     {
+        $this->authorize('edit', Region::class);
         $this->validate($request,[
-            'editname' => 'required|unique:countries,name,'.$id,
+            'editname' => 'required|unique:regions,name,'.$id,
             'editcountry_id' => 'required|exists:countries,id',
-            'editcity_id' => 'required|exists:cities,id',
 
         ],[
             'editname.required' => 'Country name is required'
@@ -92,7 +90,6 @@ class RegionsController extends Controller
         $region = Region::findOrFail($id);
         $region->name = $request['editname'];
         $region->country_id = $request['editcountry_id'];
-        $region->city_id = $request['editcity_id'];
         $region->status_id = $request['editstatus_id'];
         $region->user_id = auth()->user()->id;
         $region->save();
@@ -108,6 +105,7 @@ class RegionsController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', Region::class);
         $region = Region::findOrFail($id);
         $region->delete();
 

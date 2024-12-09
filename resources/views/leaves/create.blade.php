@@ -33,20 +33,18 @@
 
                             <div class="col-md-6 form-group">
                                 <label for="post_id">Class <span class="text-danger">*</span></label>
-                                <select name="post_id" id="post_id" class="form-control form-control-sm rounded-0">
-                                        <option selected disabled>Choose class</option>
+                                <select name="post_id[]" id="post_id" class="form-control form-control-sm rounded-0 select2" multiple>
                                         @foreach ($posts as $id=>$title)
-                                            <option value="{{$id}}">{{$title}}</option>
+                                            <option value="{{$id}}" {{old('post_id') == $id?'selected':''}}>{{$title}}</option>
                                         @endforeach
                                 </select>
                             </div>
 
                             <div class="col-md-6 form-group mb-3">
                                 <label for="tag">Tag <span class="text-danger">*</span></label>
-                                <select name="tag" id="tag" class="form-control form-control-sm rounded-0">
-                                    <option selected disabled>Choose tag</option>
+                                <select name="tag[]" id="tag" class="form-control form-control-sm rounded-0" multiple>
                                     @foreach ($tags as $id=>$name)
-                                        <option value="{{$id}}">{{$name}}</option>
+                                        <option value="{{$id}}" {{old('tag') == $id?'selected':''}}>{{$name}}</option>
                                     @endforeach
                             </select>
                             </div>
@@ -79,6 +77,8 @@
 @section('css')
 {{-- summernote css1 js1 --}}
 <link href="{{asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style type="text/css">
 		.gallery{
 			width: 100%;
@@ -115,9 +115,19 @@
 @section('scripts')
 {{-- summernote css1 js1  --}}
 <script src="{{asset('assets/libs/summernote-0.8.18-dist/summernote-lite.min.js')}}" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
 			// console.log('hi');
+
+            $("#post_id").select2({
+                placeholder: 'Choose class'
+            });
+
+            $("#tag").select2({
+                placeholder: 'Choose authorize person'
+            });
 
 			var previewimages = function(input,output){
 
@@ -170,6 +180,12 @@
             });
 
              //End text editor for content 
+
+             $("#startdate,#enddate").flatpickr({
+                dateFormat: "Y-m-d", 
+                minDate: "today", 
+                maxDate: new Date().fp_incr(30) 
+             });
 
 		});
 </script>

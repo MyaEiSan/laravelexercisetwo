@@ -28,23 +28,29 @@ class LeaveRequest extends FormRequest
 
         if($this->method() == "POST"){
             return [
-                'post_id' => 'required',
+                'post_id' => 'required|array',
+                'post_id.*' => 'exists:posts,id',
                 'startdate' => 'required|date',
-                'enddate' => 'required|date',
+                'enddate' => 'required|date|after_or_equal:startdate',
                 'tag' => 'required',
                 'title' => 'required|max:50',
                 'content' => 'required',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1024'
+                'image' => 'nullable|array',
+                'image.*' => 'nullable|image|mimes:jpg,jpeg,png|max:1024'
+
             ];
         }else{
             return [
-                'post_id' => 'required',
+                'post_id' => 'required|array',
+                'post_id.*' => 'exists:posts,id',
                 'startdate' => 'required|date',
-                'enddate' => 'required|date',
+                'enddate' => 'required|date|after_or_equal:startdate',
                 'tag' => 'required',
                 'title' => 'required|max:50',
                 'content' => 'required',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:1024'
+                'image' => 'nullable|array',
+                'image.*' => 'nullable|image|mimes:jpg,jpeg,png|max:1024'
+
             ];
         }
         

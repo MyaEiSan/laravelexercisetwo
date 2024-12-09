@@ -7,9 +7,11 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Gender;
 use App\Models\Lead;
+use App\Models\Region;
 use App\Models\Religion;
 use App\Models\Student;
 use App\Models\StudentPhone;
+use App\Models\Township;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,12 +29,13 @@ class ProfileController extends Controller
         $lead = Lead::findOrFail($user->lead['id']);
         $genders = Gender::orderBy('name','asc')->get();
         $countries = Country::orderBy('name','asc')->where('status_id',3)->get();
-        $religions = Religion::orderBy('name','asc')->where('status_id',3)->get();
+        $regions = Region::orderBy('name','asc')->where('status_id',3)->get();
         $cities = City::orderBy('name','asc')->where('status_id',3)->get();
+        $townships = Township::orderBy('name','asc')->where('status_id',3)->get();
+        $religions = Religion::orderBy('name','asc')->where('status_id',3)->get();
+       
         $student = null; 
         $studentphones = null; 
-
-        // dd($user);
 
         if($lead->converted){
             $student = Student::findOrFail($lead->student['id']);
@@ -44,8 +47,10 @@ class ProfileController extends Controller
             'lead' => $lead, 
             'genders' => $genders, 
             'countries' => $countries, 
-            'religions' => $religions,
+            'regions' => $regions,
             'cities' => $cities,
+            'townships' => $townships,
+            'religions' => $religions,
             'student' => $student,
             'studentphones' => $studentphones
         ]);

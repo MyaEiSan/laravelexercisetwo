@@ -19,6 +19,7 @@ class ContactsController extends Controller
      */
     public function index()
     {
+        $this->authorize('view',Contact::class);
         // $data['contacts'] = Contact::paginate(5);
         $data['contacts'] = Contact::filteronly()->searchonly()->zafirstname()->paginate(3)->withQueryString();
         $relatives = Relative::orderBy('id','asc')->pluck('name','id')->prepend('Choose Relative','');
@@ -122,6 +123,7 @@ class ContactsController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete',Contact::class);
         $stage = Contact::findOrFail($id);
         $stage->delete();
 

@@ -17,6 +17,7 @@ class TagsController extends Controller
      */
     public function index()
     {
+        $this->authorize('view', Tag::class);
         $tags = Tag::orderBy('id','asc')->paginate(10);
         $statuses = Status::whereIn('id',[3,4])->get();
 
@@ -36,6 +37,7 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Tag::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:tags,name',
             'status_id' => 'required|in:3,4'
@@ -79,6 +81,7 @@ class TagsController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('edit', Tag::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:categories,name,'.$id,
             'status_id' => 'required|in:3,4'
@@ -106,6 +109,7 @@ class TagsController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete', Tag::class);
         $tag = Tag::findOrFail($id);
         $tag->delete();
 

@@ -6,8 +6,8 @@ use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ChatsController;
-use App\Http\Controllers\Api\CitiesController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CitiesController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\CountriesController;
@@ -22,6 +22,8 @@ use App\Http\Controllers\OtpsController;
 use App\Http\Controllers\PackagesController;
 use App\Http\Controllers\PaymentmethodsController;
 use App\Http\Controllers\PaymenttypesController;
+use App\Http\Controllers\PermissionRolesController;
+use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\PointTransfersController;
 use App\Http\Controllers\PostLiveViewersController;
@@ -79,14 +81,28 @@ Route::get('/', function () {
 // Route::middleware('auth')
 Route::middleware(['auth','autologout','verified'])->group(function () {
 
+    Route::middleware(['roles:Admin,Teacher'])->group(function(){
+        // Route::resource('announcements',AnnouncementsController::class);
+
+        Route::get('announcements',[AnnouncementsController::class,'index'])->name('announcements.index');
+        Route::get('announcements/create',[AnnouncementsController::class,'create'])->name('announcements.create');
+        Route::post('announcements',[AnnouncementsController::class,'store'])->name('announcements.store');
+        Route::get('announcements/{post}',[AnnouncementsController::class,'show'])->name('announcements.show');
+        Route::get('announcements/{post}/edit',[AnnouncementsController::class,'edit'])->name('announcements.edit');
+        Route::put('announcements/{post}',[AnnouncementsController::class,'update'])->name('announcements.update');
+        Route::delete('announcements/{post}',[AnnouncementsController::class,'delete'])->name('announcements.destroy');
+
+
+        Route::delete('/announcementsbulkdelete',[AnnouncementsController::class,'bulkdeletes'])->name('announcements.bulkdeletes');
+    });
+
     Route::get('/dashboards',[DashboardsController::class,'index'])->name('dashboard.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('announcements',AnnouncementsController::class);
-    Route::delete('/announcementsbulkdelete',[AnnouncementsController::class,'bulkdeletes'])->name('announcements.bulkdeletes');
+    
 
     Route::resource('attcodegenerators',AttcodegeneratorsController::class);
     Route::get('/attcodegeneratorsstatus', [AttcodegeneratorsController::class,'typestatus']);
@@ -161,16 +177,39 @@ Route::middleware(['auth','autologout','verified'])->group(function () {
     Route::resource('pointtransfers',PointTransfersController::class);
     Route::post('/pointtransfers/transfer',[PointTransfersController::class,'transfer'])->name('pointtransfers.transfers');
 
-    Route::resource('posts',PostsController::class);
-    Route::post('posts/{post}/like',[PostsLikeController::class,'like'])->name('post.like');
-    Route::post('posts/{post}/unlike',[PostsLikeController::class,'unlike'])->name('post.unlike');
-    Route::delete('/postsbulkdelete',[PostsController::class,'bulkdeletes'])->name('posts.bulkdeletes');
+   
+
+    Route::middleware(['roles:Admin,Teacher'])->group(function(){
+       // Route::resource('posts',PostsController::class);
+
+        Route::get('posts/create',[PostsController::class,'create'])->name('posts.create');
+        Route::post('posts',[PostsController::class,'store'])->name('posts.store');
+        
+        Route::get('posts/{post}/edit',[PostsController::class,'edit'])->name('posts.edit');
+        Route::put('posts/{post}',[PostsController::class,'update'])->name('posts.update');
+        Route::delete('posts/{post}',[PostsController::class,'delete'])->name('posts.destroy');
+
+
+        Route::delete('/postsbulkdelete',[PostsController::class,'bulkdeletes'])->name('posts.bulkdeletes');
+    });
+
+    Route::get('posts',[PostsController::class,'index'])->middleware(['roles:Admin,Teacher,Student,Guest'])->name('posts.index');
+    Route::get('posts/{post}',[PostsController::class,'show'])->middleware(['roles:Admin,Teacher,Student,Guest'])->name('posts.show'); // must be beneath create 
+    Route::post('posts/{post}/like',[PostsLikeController::class,'like'])->middleware(['roles:Admin,Teacher,Student'])->name('post.like');
+    Route::post('posts/{post}/unlike',[PostsLikeController::class,'unlike'])->middleware(['roles:Admin,Teacher,Student'])->name('post.unlike');
 
     Route::post('/postliveviewersinc/{post}',[PostLiveViewersController::class,'incrementviewer']); // here must be {post} , can't {id} cuz controller using (Post $post)
     Route::post('/postliveviewersdec/{post}',[PostLiveViewersController::class,'decrementviewer']);
 
 
     Route::post('/trackdurations',[PostViewDurationController::class,'trackduration']);
+
+    Route::resource('permissions',PermissionsController::class);
+    Route::get('/permissionsstatus',[PermissionsController::class,'typestatus']);
+    Route::delete('/permissionsbulkdelete',[PermissionsController::class,'bulkdeletes'])->name('permissions.bulkdeletes');
+
+    Route::resource('permissionroles',PermissionRolesController::class);
+    Route::delete('/permissionrolesbulkdelete',[PermissionRolesController::class,'bulkdeletes'])->name('permissionroles.bulkdeletes');
 
     Route::resource('relatives',RelativesController::class);
     Route::get('/relativesstatus',[RelativesController::class,'typestatus']);

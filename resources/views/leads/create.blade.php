@@ -22,7 +22,7 @@
                         <select name="gender_id" id="gender_id" class="form-control form-control-sm rounded-0">
                             <option selected disabled>Choose a gender</option>
                             @foreach($genders as $gender)
-                                <option value="{{$gender['id']}}">{{$gender['name']}}</option>
+                                <option value="{{$gender['id']}}" {{old('gender_id') == $gender['id']?'selected':''}}>{{$gender['name']}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -42,7 +42,7 @@
                         <select name="country_id" id="country_id" class="form-control form-control-sm rounded-0 country_id">
                             <option selected disabled>Choose a country</option>
                             @foreach($countries as $country)
-                                <option value="{{$country['id']}}">{{$country['name']}}</option>
+                                <option value="{{$country['id']}}" {{old('country_id') == $country['id']?'selected':''}}>{{$country['name']}}</option>
                             @endforeach
                         </select>
                     </div>

@@ -16,10 +16,10 @@
                         <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ener City Name" value="{{old('name')}}" /> 
                     </div>
                     <div class="col-md-3 form-group mb-3">
-                        <label for="country_id">Country <span class="text-danger">*</span></label>
-                        <select name="country_id" id="country_id" class="form-control form-control-sm rounded-0">
-                            @foreach($countries as $country)
-                                <option value="{{$country['id']}}">{{$country['name']}}</option>
+                        <label for="region_id">Region <span class="text-danger">*</span></label>
+                        <select name="region_id" id="region_id" class="form-control form-control-sm rounded-0">
+                            @foreach($regions as $region)
+                                <option value="{{$region['id']}}">{{$region['name']}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -79,7 +79,7 @@
                         </th>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Country</th>
+                        <th>Region</th>
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -125,10 +125,10 @@
                             </div>
 
                             <div class="col-md-4 form-group mb-3">
-                                <label for="editcountry_id">Country <span class="text-danger">*</span></label>
-                                <select name="editcountry_id" id="editcountry_id" class="form-control form-control-sm rounded-0">
-                                    @foreach($countries as $country)
-                                        <option value="{{$country['id']}}">{{$country['name']}}</option>
+                                <label for="edit_regionid">Region <span class="text-danger">*</span></label>
+                                <select name="edit_regionid" id="edit_regionid" class="form-control form-control-sm rounded-0">
+                                    @foreach($regions as $region)
+                                        <option value="{{$region['id']}}">{{$region['name']}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -259,7 +259,6 @@
 
         async function alldatastodom(){
             const getresults = await fetchalldatasbypaginate();
-            console.log(getresults);
 
             getresults.forEach((data)=>{
                 const newtr = document.createElement('tr');
@@ -270,7 +269,7 @@
                                     </td>
                                     <td>${data.id}</td>
                                     <td>${data.name}</td>
-                                    <td>${data.country.name}</td>
+                                    <td>${data.region.name}</td>
                                     <td>
                                         <div class="form-checkbox form-switch">
                                             <input type="checkbox" class="form-check-input change-btn" ${data.status_id == 3 ? 'checked':''} data-id="${data.id}"/>
@@ -360,7 +359,7 @@
                                     </td>
                                     <td>${data.id}</td>
                                     <td>${data.name}</td>
-                                    <td>${data.country.name}</td>
+                                    <td>${data.region.name}</td>
                                     <td>
                                         <div class="form-checkbox form-switch">
                                             <input type="checkbox" class="form-check-input change-btn" ${data.status_id == 3 ? 'checked':''} data-id="${data.id}"/>
@@ -460,7 +459,7 @@
                                     </td>
                                     <td>${data.id}</td>
                                     <td>${data.name}</td>
-                                    <td>${data.country.name}</td>
+                                    <td>${data.region.name}</td>
                                     <td>
                                         <div class="form-checkbox form-switch">
                                             <input type="checkbox" class="form-check-input change-btn" ${data.status_id == 3 ? 'checked':''} data-id="${data.id}"/>

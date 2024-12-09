@@ -17,6 +17,7 @@ class DaysController extends Controller
      */
     public function index()
     {
+        $this->authorize('view',Day::class);
         $days = Day::all();
         $statuses = Status::whereIn('id',[3,4])->get();
 
@@ -104,6 +105,7 @@ class DaysController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete',Day::class);
         $day = Day::findOrFail($id);
         $day->delete();
 

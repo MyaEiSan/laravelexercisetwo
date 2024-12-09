@@ -18,6 +18,7 @@ class StagesController extends Controller
      */
     public function index()
     {
+        $this->authorize('view', Stage::class);
         $stages = Stage::all();
         $statuses = Status::whereIn('id',[3,4])->get();
 
@@ -37,6 +38,7 @@ class StagesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Stage::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:categories,name',
             'status_id' => 'required|in:3,4'
@@ -80,6 +82,7 @@ class StagesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('edit', Stage::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:categories,name,'.$id,
             'status_id' => 'required|in:3,4'
@@ -107,6 +110,7 @@ class StagesController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete', Stage::class);
         $stage = Stage::findOrFail($id);
         $stage->delete();
 

@@ -18,6 +18,7 @@ class RelativesController extends Controller
      */
     public function index()
     {
+        $this->authorize('view', Relative::class);
         $relatives = Relative::all();
         $statuses = Status::whereIn('id',[3,4])->get();
 
@@ -37,6 +38,7 @@ class RelativesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Relative::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:relatives,name',
             'status_id' => 'required|in:3,4'
@@ -80,6 +82,7 @@ class RelativesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('edit', Relative::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:relatives,name,'.$id,
             'status_id' => 'required|in:3,4'
@@ -107,6 +110,7 @@ class RelativesController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete', Relative::class);
         $day = Relative::findOrFail($id);
         $day->delete();
 

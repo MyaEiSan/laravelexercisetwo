@@ -16,6 +16,7 @@ class RolesController extends Controller
     
     public function index()
     {
+        $this->authorize('view', Role::class);
         $roles = Role::where(function($query){
            if($statusid = request('filterstatus_id')){
             $query->where('status_id',$statusid);
@@ -34,7 +35,7 @@ class RolesController extends Controller
     
     public function store(Request $request)
     {
-
+        $this->authorize('create', Role::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:roles,name',
             'image' => 'image|mimes:jpg,jpeg,png|max:1024',
@@ -70,25 +71,31 @@ class RolesController extends Controller
     }
 
     
-    public function show(string $id)
+    // public function show($id)
+    // {
+    //     $role = Role::findOrFail($id);
+    //     return view('roles.show',["role"=>$role]);
+    // }
+
+    public function show(Role $role)
     {
-        $role = Role::findOrFail($id);
         return view('roles.show',["role"=>$role]);
     }
 
     
-    public function edit(string $id)
+    public function edit($role)
     {
-        $role = Role::findOrFail($id);
+        $this->authorize('edit', Role::class);
+        $role = Role::findOrFail($role->id);
         $statuses = Status::whereIn('id',[3,4])->get();
-
+        
         return view('roles.edit')->with("role",$role)->with('statuses',$statuses);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $role)
     {
-        $this->validate($request,[
-            'name' => ['required','max:50','unique:roles,name,'.$id],
+        $request->validate([
+            'name' => ['required','max:50','unique:roles,name,'.$role->id],
             'image' => ['image','mimes:jpg,jpeg,png','max:1024'],
             'status_id' => ['required','in:3,4']
         ],[
@@ -99,7 +106,7 @@ class RolesController extends Controller
         $user = Auth::user();
         $user_id = $user['id'];
 
-        $role = Role::findOrFail($id);
+        $role = Role::findOrFail($role->id);
         $role->name = $request['name'];
         $role->slug = Str::slug($request['name']);
         $role->status_id = $request['status_id'];
@@ -134,6 +141,7 @@ class RolesController extends Controller
     
     public function destroy(string $id)
     {
+        $this->authorize('delete', Role::class);
         $role = Role::findOrFail($id);
             
         // Remove Old Image 

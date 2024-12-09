@@ -18,12 +18,14 @@ class AnnouncementsController extends Controller
 {
     public function index()
     {
+        $this->authorize('view',Announcement::class);
         $announcements = Announcement::all();
         return view('announcements.index',compact('announcements'));
     }
 
     public function create()
     {
+        $this->authorize('create',Announcement::class);
         $posts = DB::table('posts')->where('attshow',3)->orderBy('title','asc')->get()->pluck('title','id');
        
         return view('announcements.create',compact('posts'));
@@ -86,7 +88,7 @@ class AnnouncementsController extends Controller
                 ->where('data->id',$id)
                 ->pluck('id');
 
-        DB::table('notifications')->where('id',$getnoti)
+        DB::table('notifications')->whereIn('id',$getnoti)
         ->update(['read_at'=>now()]);
 
 
@@ -96,8 +98,9 @@ class AnnouncementsController extends Controller
     
     public function edit(string $id)
     {
-        
+
         $announcement = Announcement::findOrFail($id);
+        $this->authorize('edit',$announcement);
         $posts = DB::table('posts')->where('attshow',3)->orderBy('title','asc')->get()->pluck('title','id');
 
         return view('announcements.edit')->with("announcement",$announcement)->with('posts',$posts);
@@ -151,7 +154,9 @@ class AnnouncementsController extends Controller
     public function destroy(string $id)
     {
         $announcement = Announcement::findOrFail($id);
-            
+        
+        $this->authorize('delete',Announcement::class);
+
         // Remove Old Image 
 
         $path = $announcement->image;

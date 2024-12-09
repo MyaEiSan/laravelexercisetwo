@@ -28,7 +28,7 @@ class CitiesController extends Controller
         $city = new City();
         $city->name = $request['name'];
         $city->slug = Str::slug($request['name']);
-        $city->country_id = $request['country_id'];
+        $city->region_id = $request['region_id'];
         $city->status_id = $request['status_id'];
         $city->user_id = $request['user_id'];
         $city->save();
@@ -54,7 +54,7 @@ class CitiesController extends Controller
         $city = City::findOrFail($id);
         $city->name = $request['editname'];
         $city->slug = Str::slug($request['editname']);
-        $city->country_id = $request['editcountry_id'];
+        $city->region_id = $request['editregion_id'];
         $city->status_id = $request['editstatus_id'];
         $city->user_id = $request['user_id'];
         $city->save();
@@ -83,6 +83,10 @@ class CitiesController extends Controller
 
     public function filterbycountryid($filter){
         return CitiesResource::collection(City::where('country_id',$filter)->where('status_id',3)->get());
+    }
+
+    public function filterbyregionid($filter){
+        return CitiesResource::collection(City::where('region_id',$filter)->where('status_id',3)->get());
     }
 }
 

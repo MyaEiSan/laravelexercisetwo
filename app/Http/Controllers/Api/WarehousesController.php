@@ -29,6 +29,7 @@ class WarehousesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Warehouse::class);
         $this->validate($request,[
             "name"=>"required|unique:warehouses,name",
             "status_id" => "required", 
@@ -59,6 +60,7 @@ class WarehousesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('edit', Warehouse::class);
         $this->validate($request,[
             "name"=>"required|unique:warehouses,name,".$id,
             "status_id" => "required", 
@@ -81,6 +83,7 @@ class WarehousesController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete', Warehouse::class);
         $warehouse = Warehouse::findOrFail($id); 
         $warehouse->delete(); 
         return new WarehousesResource($warehouse);

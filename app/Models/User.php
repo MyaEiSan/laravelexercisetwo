@@ -96,4 +96,30 @@ class User extends Authenticatable implements MustVerifyEmail
     public function student(){
         return $this->hasOne(Student::class);
     }
+
+    public function roles(){
+        return $this->belongsToMany(Role::class,'role_users');  // default naming convention is role_user 
+    }
+
+    public function permissions(){
+        return $this->belongsToMany(Permission::class,'permission_roles');
+    }
+
+    // public function hasRole($rolename){
+    //     return $this->roles()->where('name',$rolename)->exists();
+    // }
+
+    public function hasRoles($rolenames){
+        return $this->roles()->whereIn('name',$rolenames)->exists();
+    }
+
+    public function hasPermission($permissionname){
+        return $this->roles()->whereHas('permissions', function($query) use($permissionname){
+            $query->where('name',$permissionname);
+        })->exists();
+    }
+
+    public function isOwner($model){
+        return $this->id == $model->user_id;
+    }
 }

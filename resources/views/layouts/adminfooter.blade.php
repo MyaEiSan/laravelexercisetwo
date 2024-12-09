@@ -227,7 +227,7 @@
             let opforcity = "";
 
             $.ajax({
-                url:   `/api/filter/cities/${getcountryid}`, 
+                url:   `/api/filter/citiesbycountry/${getcountryid}`, 
                 type: 'GET', 
                 dataType: 'json', 
                 success: function(response){

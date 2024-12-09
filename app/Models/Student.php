@@ -31,7 +31,8 @@ class Student extends Model
         'nationalid',
         'remark',
         'status_id',
-        'user_id'
+        'user_id', 
+        'profile_score'
     ];
 
     public function user(){
@@ -144,17 +145,64 @@ class Student extends Model
 
         // profile picture uploaded 
 
+        $fields = [
+            'firstname',
+            'lastname',
+            'dob', 
+            'gender_id', 
+            'age', 
+            'email',
+            'country_id', 
+            'city_id', 
+            'region_id', 
+            'township_id', 
+            'address', 
+            'religion_id', 
+            'nationalid'
+        ]; 
+
+        $score = 0; 
+
+        // profile picture uploaded 
         if($this->hasprofilepicture()){
             $score += 10;
         }
 
-        // firstname is filled 
+        foreach($fields as $field){
+            if(!empty($this->$field)){
+                $score += 10;
+            }
+        }
+
+        $phonescore = $this->studentphones()->count(); 
+
+        if($phonescore > 0){
+            $phonescore = $phonescore * 10;
+        }
+
+        $score = $this->convertScoreToPercentage($score + $phonescore);
+
+        $this->profile_score = $score; 
+        $this->save();
+
+        return $score;
+
+
     }
 
     public function hasprofilepicture(){
         return !empty($this->image);
     }
-    
+
+    public function convertScoreToPercentage($score){
+        $maxscore = 170; // Assuming 170 is the max score
+        $percentage = ($score/$maxscore) * 100;
+        return $percentage;
+    }
+
+    public function isProfileLocked(){
+        return $this->calculateProfileScore() === 100;
+    }
 }
 
 

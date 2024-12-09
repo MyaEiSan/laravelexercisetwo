@@ -10,15 +10,7 @@
                 {{csrf_field()}}
                 <div class="row align-items-end">
 
-                    <div class="col-md-3 form-group mb-3">
-                        <label for="country_id">Country <span class="text-danger">*</span></label>
-                        <select name="country_id" id="country_id" class="form-control form-control-sm rounded-0 country_id">
-                            <option selected disabled>Choose a country</option>
-                            @foreach($countries as $country)
-                                <option value="{{$country['id']}}">{{$country['name']}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                   
 
 
                     <div class="col-md-3 form-group mb-3">
@@ -26,17 +18,7 @@
                         <select name="city_id" id="city_id" class="form-control form-control-sm rounded-0 city_id">
                             <option selected disabled>Choose a city</option>
                             @foreach($cities as $city)
-                                <option value="{{$city['id']}}">{{$city['name']}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 form-group mb-3">
-                        <label for="region_id">Region <span class="text-danger">*</span></label>
-                        <select name="region_id" id="region_id" class="form-control form-control-sm rounded-0 region_id">
-                            <option selected disabled>Choose a region</option>
-                            @foreach($regions as $region)
-                                <option value="{{$region['id']}}">{{$region['name']}}</option>
+                                <option value="{{$city['id']}}" {{old('city_id') == $city['id']?'selected':''}}>{{$city['name']}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -53,7 +35,7 @@
                         <label for="status_id">Status <span class="text-danger">*</span></label>
                         <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                             @foreach($statuses as $status)
-                                <option value="{{$status['id']}}">{{$status['name']}}</option>
+                                <option value="{{$status['id']}}" {{old('status_id') == $status['id']?'selected':''}}>{{$status['name']}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -87,10 +69,6 @@
         </div>
 
         <div class="col-md-12">
-{{-- 
-            <a href="{{route('countries.create')}}" class="btn btn-primary btn-sm rounded-0">Create</a>
-
-            <hr/> --}}
 
             <table id="country-table" class="table table-sm table-hover border">
                 <thead>
@@ -100,9 +78,7 @@
                         </th>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Region</th>
                         <th>City</th>
-                        <th>Country</th>
                         <th>Status</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -119,9 +95,7 @@
                         </td>
                         <td>{{$idx + $townships->firstItem()}}</td>
                         <td>{{$township->name}}</td>
-                        <td>{{$township->region->name}}</td>
                         <td>{{$township->city->name}}</td>
-                        <td>{{$township->country->name}}</td>
                         <td>
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input change-btn" {{ $township->status_id === 3 ? 'checked':'' }} data-id="{{$township->id}}" />
@@ -179,15 +153,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                <div class="col-md-3 form-group mb-3">
-                                    <label for="editcountry_id">Country <span class="text-danger">*</span></label>
-                                    <select name="editcountry_id" id="editcountry_id" class="form-control form-control-sm rounded-0 country_id">
-                                        @foreach($countries as $country)
-                                            <option value="{{$country['id']}}">{{$country['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
             
             
                                 <div class="col-md-3 form-group mb-3">
@@ -195,15 +160,6 @@
                                     <select name="editcity_id" id="editcity_id" class="form-control form-control-sm rounded-0 city_id">
                                         @foreach($cities as $city)
                                             <option value="{{$city['id']}}">{{$city['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <div class="col-md-3 form-group mb-3">
-                                    <label for="editregion_id">Region <span class="text-danger">*</span></label>
-                                    <select name="editregion_id" id="editregion_id" class="form-control form-control-sm rounded-0 region_id">
-                                        @foreach($regions as $region)
-                                            <option value="{{$region['id']}}">{{$region['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -320,7 +276,7 @@
             
 
             const getid = $(this).attr('data-id');
-            $("#formaction").attr('action',`/regions/${getid}`);
+            $("#formaction").attr('action',`/townships/${getid}`);
 
             e.preventDefault();
         })

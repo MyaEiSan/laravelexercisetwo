@@ -15,6 +15,7 @@ class WarehousesController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Warehouse::class);
         $warehouses = Warehouse::paginate(5);
         $statuses = Status::whereIn('id',[3,4])->get();
         return view('warehouses.index',compact('warehouses','statuses'));
@@ -22,6 +23,7 @@ class WarehousesController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Warehouse::class);
         $statuses = Status::whereIn('id',[3,4])->get();
         return view('warehouses.create',compact('statuses'));
     }

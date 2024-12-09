@@ -17,6 +17,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
+        $this->authorize('view',Category::class);
         $categories = Category::all();
         $statuses = Status::whereIn('id',[3,4])->get();
 
@@ -100,6 +101,7 @@ class CategoriesController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete',Category::class);
         $category = Category::findOrFail($id);
         $category->delete();
 

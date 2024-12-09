@@ -71,6 +71,8 @@ class Kernel extends HttpKernel
 
         'validate.subscription' => \App\Http\Middleware\ValidateSubscriptionMid::class, 
         'check.registration.step' => \App\Http\Middleware\CheckRegistrationStepMid::class,
-        'autologout' => \App\Http\Middleware\AutoLogoutMid::class
+        'autologout' => \App\Http\Middleware\AutoLogoutMid::class, 
+        'roles' => \App\Http\Middleware\RoleMid::class,
+        'permission' => \App\Http\Middleware\PermissionMid::class
     ];
 }

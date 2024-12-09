@@ -21,6 +21,12 @@ class LeavesController extends Controller
 {
     public function index()
     {
+        if(auth()->user()->can('viewany',Leave::class)){
+            $leaves = Leave::all(); // Admin Teacher can see all leaves
+        }else{
+            $leaves = Leave::where('user_id',auth()->id())->get();
+        }
+
         $leaves = Leave::with('leavefiles')->filteronly()->searchonly()->paginate(10);
         $posts = DB::table('posts')->where('attshow',3)->orderBy('title','asc')->get()->pluck('title','id')->prepend('Choose class','');
         return view('leaves.index',compact('leaves','posts'));
@@ -28,6 +34,7 @@ class LeavesController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Leave::class);
         $data['posts']= DB::table('posts')->where('attshow',3)->orderBy('title','asc')->get()->pluck('title','id');
         $data['tags'] = User::orderBy('name','asc')->get()->pluck('name','id');
         $data['gettoday'] = Carbon::today()->format('Y-m-d');//get today
@@ -52,10 +59,10 @@ class LeavesController extends Controller
         $user_id = $user['id'];
 
         $leave = new Leave();
-        $leave->post_id = $request['post_id'];
+        $leave->post_id = json_encode($request['post_id']);
         $leave->startdate = $request['startdate'];
         $leave->enddate = $request['enddate'];
-        $leave->tag = $request['tag'];
+        $leave->tag = json_encode($request['tag']);
         $leave->title = $request['title'];
         $leave->content = $request['content'];
         $leave->user_id = $user_id;
@@ -112,16 +119,6 @@ class LeavesController extends Controller
 
         $leave = Leave::findOrFail($id);
 
-        $type = "App\Notifications\LeaveNotify";
-        $getnoti = DB::table('notifications')
-                ->where('notifiable_id',$user_id)
-                ->where('type',$type)
-                ->where('data->id',$id)
-                ->pluck('id');
-
-        DB::table('notifications')->where('id',$getnoti)
-        ->update(['read_at'=>now()]);
-
         return view('leaves.show',["leave"=>$leave]);
     }
 
@@ -130,6 +127,8 @@ class LeavesController extends Controller
     {
         
         $data['leave'] = Leave::findOrFail($id);
+        $this->authorize('edit',$data['leave']);
+
         $data['posts']= DB::table('posts')->where('attshow',3)->orderBy('title','asc')->get()->pluck('title','id');
         $data['tags'] = User::orderBy('name','asc')->get()->pluck('name','id');
 
@@ -145,10 +144,10 @@ class LeavesController extends Controller
         $user = Auth::user();
         $user_id = $user['id'];
 
-        $leave->post_id = $request['post_id'];
+        $leave->post_id = json_encode($request['post_id']);
         $leave->startdate = $request['startdate'];
         $leave->enddate = $request['enddate'];
-        $leave->tag = $request['tag'];
+        $leave->tag = json_encode($request['tag']);
         $leave->title = $request['title'];
         $leave->content = $request['content'];
         $leave->save();
@@ -194,6 +193,7 @@ class LeavesController extends Controller
     
     public function destroy(string $id)
     {
+        $this->authorize('delete', Leave::class);
         $leave = Leave::findOrFail($id);
             
         // Remove Old Image 

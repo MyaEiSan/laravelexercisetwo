@@ -15,19 +15,17 @@ class TownshipsController extends Controller
 {
     public function index()
     {
-
+        $this->authorize('view', Township::class);
         $townships = Township::where(function($query){
             if($getname = request('filtername')){
                 $query->where('name','LIKE','%'.$getname.'%');
             }
         })->paginate(15);
 
-        $regions = Region::orderBy('name','asc')->where('status_id',3)->get();
-        $countries = Country::orderBy('name','asc')->where('status_id',3)->get();
         $cities = City::orderBy('name','asc')->where('status_id',3)->get();
         $statuses = Status::whereIn('id',[3,4])->get();
 
-        return view('townships.index',compact('townships','regions','countries','cities','statuses'));
+        return view('townships.index',compact('townships','cities','statuses'));
     }
 
   
@@ -39,27 +37,22 @@ class TownshipsController extends Controller
     
     public function store(Request $request)
     {
+        $this->authorize('create', Township::class);
         $this->validate($request,[
-            'name' => 'required|unique:countries,name',
-            'region_id' => 'required|exists:regions,id',
-            'country_id' => 'required|exists:countries,id',
+            'name' => 'required|unique:townships,name',
             'city_id' => 'required|exists:cities,id', 
             'status_id' => 'required'
         ],[
             'name.required' => 'Region name is required',
-            'region_id.required' => 'Region is required', 
-            'country_id.required' => 'Country is required', 
             'city_id.required' => 'City is required'
         ]);
 
-        $region = new Region();
-        $region->name = $request['name'];
-        $region->region_id = $request['region_id'];
-        $region->country_id = $request['country_id'];
-        $region->city_id = $request['city_id'];
-        $region->status_id = $request['status_id'];
-        $region->user_id = auth()->user()->id;
-        $region->save();
+        $township = new Township();
+        $township->name = $request['name'];
+        $township->city_id = $request['city_id'];
+        $township->status_id = $request['status_id'];
+        $township->user_id = auth()->user()->id;
+        $township->save();
 
         return redirect(route('townships.index'));
     }
@@ -84,24 +77,21 @@ class TownshipsController extends Controller
     
     public function update(Request $request, $id)
     {
+        $this->authorize('edit', Township::class);
         $this->validate($request,[
-            'editname' => 'required|unique:countries,name,'.$id,
-            'editregion_id' => 'required|exists:regions,id',
-            'editcountry_id' => 'required|exists:countries,id',
+            'editname' => 'required|unique:townships,name,'.$id,
             'editcity_id' => 'required|exists:cities,id',
 
         ],[
             'editname.required' => 'Country name is required'
         ]);
 
-        $region = Region::findOrFail($id);
-        $region->name = $request['editname'];
-        $region->region_id = $request['editregion_id'];
-        $region->country_id = $request['editcountry_id'];
-        $region->city_id = $request['editcity_id'];
-        $region->status_id = $request['editstatus_id'];
-        $region->user_id = auth()->user()->id;
-        $region->save();
+        $township = Township::findOrFail($id);
+        $township->name = $request['editname'];
+        $township->city_id = $request['editcity_id'];
+        $township->status_id = $request['editstatus_id'];
+        $township->user_id = auth()->user()->id;
+        $township->save();
 
         return redirect(route('townships.index'));
     }
@@ -114,6 +104,7 @@ class TownshipsController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', Township::class);
         $township = Township::findOrFail($id);
         $township->delete();
 

@@ -15,6 +15,7 @@ class CountriesController extends Controller
 {
     public function index()
     {
+        $this->authorize('view',Country::class);
         // http://localhost:8000/countries?filtername=My
         // dd(request('filtername'));
 
@@ -33,6 +34,7 @@ class CountriesController extends Controller
   
     public function create()
     {
+        $this->authorize('create', Country::class);
         return view('countries.create');
     }
 
@@ -105,6 +107,7 @@ class CountriesController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete',Country::class);
         $country = Country::findOrFail($id);
         $country->delete();
 

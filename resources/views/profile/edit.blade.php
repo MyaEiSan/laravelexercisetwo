@@ -109,6 +109,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row g-0">
+                                        <div class="progress" style="height: 9px" aria-valuenow="{{$user->student['profile_score']}}">
+                                            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: {{$user->student['profile_score']}}%">{{$user->student['profile_score']}}%</div>
+                                        </div>
+                                    </div>
                                 @endif
 
                             </div>
@@ -289,7 +294,7 @@
                                         </div>
                     
                                         @if($lead->isconverted())
-                                            <small>This lead have already been converted to a student. Editing is disabled.</small>
+                                            <small class="text-danger">This lead have already been converted to a student. Editing is disabled.</small>
                                         @endif
                                        
                                         <div class="col-md-12">
@@ -310,122 +315,147 @@
                                         @method('PUT')
                                         <div class="row">
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="firstname">First Name <span class="text-danger">*</span></label>
-                                                @error('firstname')
+                                                <label for="editfirstname">First Name <span class="text-danger">*</span></label>
+                                                @error('editfirstname')
                                                     <span class="text-danger">{{$message}}</span>
                                                 @enderror
-                                                <input type="text" name="firstname" id="firstname" class="form-control form-control-sm rounded-0" placeholder="Ener First name" value="{{$student->firstname}}" /> 
+                                                <input type="text" name="editfirstname" id="editfirstname" class="form-control form-control-sm rounded-0" placeholder="Ener First name" value="{{$student->firstname}}" /> 
                                             </div>
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="lastname">Last Name <span class="text-danger">*</span></label>
-                                                @error('lastname')
+                                                <label for="editlastname">Last Name <span class="text-danger">*</span></label>
+                                                @error('editlastname')
                                                     <span class="text-danger">{{$message}}</span>
                                                 @enderror
-                                                <input type="text" name="lastname" id="lastname" class="form-control form-control-sm rounded-0" placeholder="Ener Last Name" value="{{$student->lastname}}"/> 
+                                                <input type="text" name="editlastname" id="editlastname" class="form-control form-control-sm rounded-0" placeholder="Ener Last Name" value="{{$student->lastname}}"/> 
                                             </div>
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="gender_id">Gender <span class="text-danger">*</span></label>
-                                                <select name="gender_id" id="gender_id" class="form-control form-control-sm rounded-0">
+                                                <label for="editgender_id">Gender <span class="text-danger">*</span></label>
+                                                <select name="editgender_id" id="editgender_id" class="form-control form-control-sm rounded-0">
                                                     <option selected disabled>Choose a gender</option>
                                                     @foreach($genders as $gender)
-                                                        <option value="{{$gender['id']}}" {{$gender['id'] == old('gender_id',$student->gender_id) ?'selected':''}}>{{$gender['name']}}</option>
+                                                        <option value="{{$gender['id']}}" {{$gender['id'] == old('editgender_id',$student->gender_id) ?'selected':''}}>{{$gender['name']}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                         
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="age">Age <span class="text-danger">*</span></label>
-                                                <input type="number" name="age" id="age" class="form-control form-control-sm rounded-0" placeholder="Ener your age" value="{{old('age',$student->age)}}"/> 
+                                                <label for="editage">editage <span class="text-danger">*</span></label>
+                                                <input type="number" name="editage" id="editage" class="form-control form-control-sm rounded-0" placeholder="Ener your age" value="{{old('editage',$student->age)}}"/> 
                                             </div>
 
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="dob">Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="date" name="dob" id="dob" class="form-control form-control-sm rounded-0" placeholder="Ener your dob" value="{{old('dob',$student->dob)}}" readonly/> 
+                                                <label for="editdob">Date of Birth <span class="text-danger">*</span></label>
+                                                <input type="date" name="editdob" id="editdob" class="form-control form-control-sm rounded-0" placeholder="Ener your dob" value="{{old('editdob',$student->dob)}}" /> 
                                             </div>
 
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="religion_id">Religion <span class="text-danger">*</span></label>
-                                                <select name="religion_id" id="religion_id" class="form-control form-control-sm rounded-0 religion_id">
+                                                <label for="editreligion_id">Religion <span class="text-danger">*</span></label>
+                                                <select name="editreligion_id" id="editreligion_id" class="form-control form-control-sm rounded-0 editreligion_id">
                                                     <option selected disabled>Choose a religion</option>
                                                     @foreach($religions as $religion)
-                                                        <option value="{{$religion['id']}}" {{$religion['id'] == old('religion_id',$student->religion_id)?'selected':''}}>{{$religion['name']}}</option>
+                                                        <option value="{{$religion['id']}}" {{$religion['id'] == old('editreligion_id',$student->religion_id)?'selected':''}}>{{$religion['name']}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                         
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="email">Email <span class="text-danger">*</span></label>
-                                                <input type="email" name="email" id="email" class="form-control form-control-sm rounded-0" placeholder="Ener your email" value="{{old('email',$student->email)}}" readonly/> 
+                                                <label for="editemail">Email <span class="text-danger">*</span></label>
+                                                <input type="email" name="editemail" id="editemail" class="form-control form-control-sm rounded-0" placeholder="Ener your email" value="{{old('editemail',$student->email)}}" readonly/> 
                                             </div>
 
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="nationalid">National Id <span class="text-danger">*</span></label>
-                                                <input type="text" name="nationalid" id="nationalid" class="form-control form-control-sm rounded-0" placeholder="Ener your national" value="{{old('nationalid',$student->nationalid)}}"/> 
+                                                <label for="editnational_id">National Id <span class="text-danger">*</span></label>
+                                                <input type="text" name="editnational_id" id="editnational_id" class="form-control form-control-sm rounded-0" placeholder="Ener your national" value="{{old('editnational_id',$student->nationalid)}}"/> 
                                             </div>
                         
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="country_id">Country <span class="text-danger">*</span></label>
-                                                <select name="country_id" id="country_id" class="form-control form-control-sm rounded-0 country_id">
+                                                <label for="editcountry_id">Country <span class="text-danger">*</span></label>
+                                                <select name="editcountry_id" id="editcountry_id" class="form-control form-control-sm rounded-0 editcountry_id">
                                                     <option selected disabled>Choose a country</option>
                                                     @foreach($countries as $country)
-                                                        <option value="{{$country['id']}}" {{$country['id'] == old('country_id',$student->country_id)?'selected':''}}>{{$country['name']}}</option>
+                                                        <option value="{{$country['id']}}" {{$country['id'] == old('editcountry_id',$student->country_id)?'selected':''}}>{{$country['name']}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                        
+
+                                            <div class="col-md-3 form-group mb-3">
+                                                <label for="editregion_id">Region <span class="text-danger">*</span></label>
+                                                <select name="editregion_id" id="editregion_id" class="form-control form-control-sm rounded-0 editregion_id" data-selected="{{old('editregion_id',$student->region_id)}}">
+                                                    <option selected disabled>Choose a region</option>
+                                                    {{-- @foreach($regions as $region)
+                                                        <option value="{{$region['id']}}" {{$region['id'] == old('region_id',$student->region_id)?'selected':''}}>{{$region['name']}}</option>
+                                                    @endforeach --}}
+                                                </select>
+                                            </div>
                         
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="city_id">City <span class="text-danger">*</span></label>
-                                                <select name="city_id" id="city_id" class="form-control form-control-sm rounded-0 city_id">
+                                                <label for="editcity_id">City <span class="text-danger">*</span></label>
+                                                <select name="editcity_id" id="editcity_id" class="form-control form-control-sm rounded-0 editcity_id" data-selected="{{old('editcity_id',$student->city_id)}}">
                                                     <option selected disabled>Choose a city</option>
-                                                    @foreach($cities as $city)
-                                                        <option value="{{$city['id']}}" {{$city['id'] == old('city_id',$student->city_id)?'selected':''}}>{{$city['name']}}</option>
-                                                    @endforeach
+                                                    {{-- @foreach($cities as $city)
+                                                        <option value="{{$city['id']}}" {{$city['id'] == old('editcity_id',$student->city_id)?'selected':''}}>{{$city['name']}}</option>
+                                                    @endforeach --}}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3 form-group mb-3">
+                                                <label for="edittownship_id">Township <span class="text-danger">*</span></label>
+                                                <select name="edittownship_id" id="edittownship_id" class="form-control form-control-sm rounded-0 edittownship_id" data-selected="{{old('edittownship_id',$student->township_id)}}">
+                                                    <option selected disabled>Choose a township</option>
+                                                    {{-- @foreach($townships as $township)
+                                                        <option value="{{$township['id']}}" {{$township['id'] == old('edittownship_id',$student->township_id)?'selected':''}}>{{$township['name']}}</option>
+                                                    @endforeach --}}
                                                 </select>
                                             </div>
                         
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="regnumber">Register Number <span class="text-danger">*</span></label>
+                                                <label for="editregnumber">Register Number <span class="text-danger">*</span></label>
                                                 @error('regnumber')
                                                     <span class="text-danger">{{$message}}</span>
                                                 @enderror
-                                                <input type="text" name="regnumber" id="regnumber" class="form-control form-control-sm rounded-0" placeholder="Ener Register Number" value="{{$student->regnumber}}"/> 
+                                                <input type="text" name="editregnumber" id="editregnumber" class="form-control form-control-sm rounded-0" placeholder="Ener Register Number" value="{{$student->regnumber}}"/> 
                                             </div>
 
                                             <div class="col-md-3 form-group mb-3">
-                                                <label for="address">Address <span class="text-danger">*</span></label>
-                                                <input type="text" name="address" id="address" class="form-control form-control-sm rounded-0" placeholder="Ener your address" value="{{old('address',$student->address)}}"/> 
+                                                <label for="editaddress">Address <span class="text-danger">*</span></label>
+                                                <input type="text" name="editaddress" id="editaddress" class="form-control form-control-sm rounded-0" placeholder="Ener your address" value="{{old('editaddress',$student->address)}}"/> 
                                             </div>
 
                                             <div id="multiphone" class="col-md-3 form-group mb-3 editpage">
                                                 <label for="phone">Phone</label>
-                                                @if(count($studentphones) > 0)
-                                                @foreach($studentphones as $studentphone)
-                                                    <input type="hidden" name="studentphones[]" value="{{$studentphone->id}}" />
-                                                    <div class="input-group phonelimit">
-                                                        <input type="text" name="phone[]" id="phone" class="form-control form-control-sm rounded-0 phone" placeholder="Enter Mobile Number" value="{{old('phone',$studentphone)}}" />
-                                                        @if($studentphone->count() > 1) 
-                                                            <a class="input-group-text" href="{{route('studentphones.delete',$studentphone->id)}}">
-                                                                <span style="font-size: 10px;cursor: pointer; removephone"><i class="fas fa-minus-circle text-danger"></i></span>
-                                                            </a>
-                                                        @endif
-                                                        <span id="addphone" class="input-group-text" style="font-size:10px;cursor: pointer; "><i class="fas fa-plus-circle text-success"></i></span>
-                                                    </div>
-                                                @endforeach 
-                                                @else
+                                                @if($studentphones->isEmpty())
                                                 <div class="input-group phonelimit">
                                                     <input type="text" name="newphone[]" id="phone" class="form-control form-control-sm rounded-0 phone" placeholder="Enter Mobile Number" value="{{old('phone')}}" />
                                                     <span id="addphone" class="input-group-text" style="font-size:10px;cursor: pointer; "><i class="fas fa-plus-circle"></i></span>
-                                                </div>   
+                                                </div>  
+                                                @else
+                                            
+                                                @foreach($studentphones as $studentphone)
+                                                
+                                                    <input type="hidden" name="studentphones[]" value="{{$studentphone->id}}" />
+                                                    <div class="input-group phonelimit">
+                                                        <input type="text" name="phone[]" id="phone" class="form-control form-control-sm rounded-0 phone" placeholder="Enter Mobile Number" value="{{old('phone',$studentphone->phone)}}" />
+                                                        <a class="input-group-text" href="{{route('studentphones.delete',$studentphone->id)}}">
+                                                            <span style="font-size: 10px;cursor: pointer; remove-phone-btn"><i class="fas fa-minus-circle text-danger"></i></span>
+                                                        </a>
+                                                        <span id="addphone" class="input-group-text" style="font-size:10px;cursor: pointer; "><i class="fas fa-plus-circle text-success"></i></span>
+                                                    </div>
+                                                @endforeach 
+
                                                 @endif
                                             </div>
                                             <div class="col-md-12 form-group mb-3">
                                                 <label for="remark">Remark</label>
                                                 <textarea name="remark" id="remark" class="form-control rounded-0" rows="5" placeholder="Enter Remark">{{$student->remark}}</textarea> 
                                             </div>
+
+                                            @if($user->student->isProfileLocked())
+                                                <small class="text-danger">This profile is locked because profile score is 100%.</small>
+                                            @endif
+                                            
                                             <div class="col-md-12">
                                                 <div class="d-flex justify-content-end">
-                                                    <button type="submit" class="btn btn-primary btn-sm rounded-0 ms-3">Submit</button>
+                                                    <button type="submit" class="btn btn-primary btn-sm rounded-0 ms-3" {{$user->student->isProfileLocked()?'disabled':''}}>Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -658,6 +688,216 @@
 
 <script type="text/javascript">
 
+$(document).ready(function(){
+
+    // get regions by country 
+    $(document).on('change','.editcountry_id',function(){
+        const getcountryid = $(this).val();
+
+        let opforregion = "";
+        let opforcity = "";
+        let opfortownship = "";
+
+        $.ajax({
+            url:   `/api/filter/regions/${getcountryid}`, 
+            type: 'GET', 
+            dataType: 'json', 
+            success: function(response){
+
+                $(".editregion_id").empty();
+                $(".editcity_id").empty();
+                $(".edittownship_id").empty();
+
+                opforregion += `<option selected disabled>Choose a region</option>`;
+                opforcity += `<option selected disabled>Choose a city</option>`;
+                opfortownship += `<option selected disabled>Choose a township</option>`;
+
+                
+                for(let x = 0; x < response.data.length; x++){
+                    opforregion +=`<option value="${response.data[x].id}">${response.data[x].name}</option>`;
+                }
+
+                $(".editregion_id").append(opforregion);
+                $(".editcity_id").append(opforcity);
+                $(".edittownship_id").append(opfortownship);
+
+            }, 
+            error: function(response){
+                console.log("Error : ",response);
+            }
+        });
+    });
+
+    
+    // get city by region 
+    $(document).on('change','.editregion_id',function(){
+        const getregionid = $(this).val();
+
+        let opforcity = "";
+        let opfortownship = "";
+
+        $.ajax({
+            url:   `/api/filter/cities/${getregionid}`, 
+            type: 'GET', 
+            dataType: 'json', 
+            success: function(response){
+
+                $(".editcity_id").empty();
+                $(".edittownship_id").empty();
+
+                opforcity += `<option selected disabled>Choose a city</option>`;
+                opfortownship += `<option selected disabled>Choose a township</option>`;
+
+                
+                for(let x = 0; x < response.data.length; x++){
+                    opforcity +=`<option value="${response.data[x].id}">${response.data[x].name}</option>`;
+                }
+
+                $(".editcity_id").append(opforcity);
+                $(".edittownship_id").append(opfortownship);
+
+            }, 
+            error: function(response){
+                console.log("Error : ",response);
+            }
+        });
+    });
+
+    // get township by city 
+    $(document).on('change','.editcity_id',function(){
+        const getcityid = $(this).val();
+
+        let opfortownship = "";
+
+        $.ajax({
+            url:   `/api/filter/townships/${getcityid}`, 
+            type: 'GET', 
+            dataType: 'json', 
+            success: function(response){
+
+                $(".edittownship_id").empty();
+
+                opfortownship += `<option selected disabled>Choose a township</option>`;
+
+                
+                for(let x = 0; x < response.data.length; x++){
+                    opfortownship +=`<option value="${response.data[x].id}">${response.data[x].name}</option>`;
+                }
+
+                $(".edittownship_id").append(opfortownship);
+
+            }, 
+            error: function(response){
+                console.log("Error : ",response);
+            }
+        });
+    });
+
+    // Start Auto Selected Dynamic Select 
+
+    const countryid = $('#editcountry_id').val(); 
+    const regionid = $("#editregion_id").data('selected');
+    const cityid = $("#editcity_id").data('selected');
+    const townshipid = $("#edittownship_id").data('selected');
+
+    // console.log(countryid,regionid,cityid,townshipid);
+
+    if(countryid){
+        loadregions(countryid,regionid,cityid,townshipid);
+    }
+
+    function loadregions(countryid,regionid,cityid,townshipid){
+        let opforregion = "";
+
+        $.ajax({
+            url:   `/api/filter/regions/${countryid}`, 
+            type: 'GET', 
+            dataType: 'json', 
+            success: function(response){
+
+                $(".editregion_id").empty();
+
+                opforregion += `<option selected disabled>Choose a region</option>`;
+
+                for(let x = 0; x < response.data.length; x++){
+                    opforregion +=`<option value="${response.data[x].id}" ${response.data[x].id == regionid? 'selected':''}>${response.data[x].name}</option>`;
+                }
+
+                $(".editregion_id").html(opforregion);
+
+                loadcities(regionid,cityid,townshipid)
+
+            }, 
+            error: function(response){
+                console.log("Error : ",response);
+            }
+        });
+    }
+
+    function loadcities(regionid,cityid,townshipid){
+        let opforcity = "";
+
+        $.ajax({
+            url:   `/api/filter/cities/${regionid}`, 
+            type: 'GET', 
+            dataType: 'json', 
+            success: function(response){
+
+                $(".editcity_id").empty();
+
+                opforcity += `<option selected disabled>Choose a city</option>`;
+
+                for(let x = 0; x < response.data.length; x++){
+                    opforcity +=`<option value="${response.data[x].id}" ${response.data[x].id == cityid? 'selected':''}>${response.data[x].name}</option>`;
+                }
+
+                $(".editcity_id").html(opforcity);
+
+                if(cityid){
+                    loadtownships(cityid,townshipid)
+                }
+
+            }, 
+            error: function(response){
+                console.log("Error : ",response);
+            }
+        });
+    }
+
+    function loadtownships(cityid,townshipid){
+        let opfortownship = "";
+
+        $.ajax({
+            url:   `/api/filter/townships/${cityid}`, 
+            type: 'GET', 
+            dataType: 'json', 
+            success: function(response){
+
+                $(".edittownship_id").empty();
+
+                opfortownship += `<option selected disabled>Choose a city</option>`;
+
+                // for(let x = 0; x < response.data.length; x++){
+                //     opfortownship +=`<option value="${response.data[x].id}" ${response.data[x].id == townshipid? 'selected':''}>${response.data[x].name}</option>`;
+                // }
+
+                response.data.forEach(township=>{
+                    opfortownship +=`<option value="${township.id}" ${township.id == townshipid? 'selected':''}>${township.name}</option>`;
+                });
+
+                $(".edittownship_id").html(opfortownship);
+
+            }, 
+            error: function(response){
+                console.log("Error : ",response);
+            }
+        });
+    }
+
+    // End Auto Selected Dynamic Select 
+
+})
+
 // Start Back Btn 
     const getbtnback = document.getElementById('btn-back');
     getbtnback.addEventListener('click',function(){
@@ -668,231 +908,231 @@
 
 // Start Tab Box 
 
-var gettablinks = document.getElementsByClassName('tablinks'); //HTML Collection
-var gettabpanes = document.getElementsByClassName('tab-pane');
+    var gettablinks = document.getElementsByClassName('tablinks'); //HTML Collection
+    var gettabpanes = document.getElementsByClassName('tab-pane');
 
-var tabpanes = Array.from(gettabpanes);
+    var tabpanes = Array.from(gettabpanes);
 
-function gettab(evn,linkid){
+    function gettab(evn,linkid){
 
-	// console.log(evn.target);
-	// console.log(linkid);
+        // console.log(evn.target);
+        // console.log(linkid);
 
-	tabpanes.forEach(function(tabpane){
-		tabpane.style.display = "none";
-	});
+        tabpanes.forEach(function(tabpane){
+            tabpane.style.display = "none";
+        });
 
-	for(var x=0; x < gettablinks.length; x++){
-		gettablinks[x].className = gettablinks[x].className.replace(" active","");
-	}
+        for(var x=0; x < gettablinks.length; x++){
+            gettablinks[x].className = gettablinks[x].className.replace(" active","");
+        }
 
-	document.getElementById(linkid).style.display = "block";
+        document.getElementById(linkid).style.display = "block";
 
-	// evn.target.className += " active";
-	// evn.target.className = evn.target.className.replace("tablinks","tablinks active");
-	// evn.target.classList.add('active');
+        // evn.target.className += " active";
+        // evn.target.className = evn.target.className.replace("tablinks","tablinks active");
+        // evn.target.classList.add('active');
 
-	// console.log(evn);
-	// console.log(evn.target);
-	// console.log(evn.currentTarget);
-	evn.currentTarget.className += " active";
-}
+        // console.log(evn);
+        // console.log(evn.target);
+        // console.log(evn.currentTarget);
+        evn.currentTarget.className += " active";
+    }
 
-document.getElementById('autoclick').click();
+    document.getElementById('autoclick').click();
 
 // End Tab Box 
 
 // Start Accordion
-var getacctitles = document.getElementsByClassName("acctitle");
-// console.log(getacctitles); //HTML Collection
-var getacccontents = document.querySelectorAll(".acccontent");
-// console.log(getacccontent); //NodeList
+    var getacctitles = document.getElementsByClassName("acctitle");
+    // console.log(getacctitles); //HTML Collection
+    var getacccontents = document.querySelectorAll(".acccontent");
+    // console.log(getacccontent); //NodeList
 
 
-for(var x = 0; x < getacctitles.length; x++){
-	// console.log(x);
+    for(var x = 0; x < getacctitles.length; x++){
+        // console.log(x);
 
-	getacctitles[x].addEventListener('click',function(e){
-		// console.log(e.target);
-		// console.log(this);
+        getacctitles[x].addEventListener('click',function(e){
+            // console.log(e.target);
+            // console.log(this);
 
-		this.classList.toggle("shown");
-		var getcontent = this.nextElementSibling;
-		// console.log(getcontent);
+            this.classList.toggle("shown");
+            var getcontent = this.nextElementSibling;
+            // console.log(getcontent);
 
-		if(getcontent.style.height){
-			getcontent.style.height = null; //beware can't set 0
-		}else{
-			// console.log(getcontent.scrollHeight);
-			getcontent.style.height= getcontent.scrollHeight + "px";
-		}
-		
-	});
+            if(getcontent.style.height){
+                getcontent.style.height = null; //beware can't set 0
+            }else{
+                // console.log(getcontent.scrollHeight);
+                getcontent.style.height= getcontent.scrollHeight + "px";
+            }
+            
+        });
 
-	if(getacctitles[x].classList.contains("shown")){
-		getacccontents[x].style.height = getacccontents[x].scrollHeight+"px";
-	}
+        if(getacctitles[x].classList.contains("shown")){
+            getacccontents[x].style.height = getacccontents[x].scrollHeight+"px";
+        }
 
-}
+    }
 // End Accordion 
 
 // Note :: do not forget to put createpage or editpage / phone 
 
-$(document).on('click', '#addphone', function(){
-                addnewinput();
-            });
+    $(document).on('click', '#addphone', function(){addnewinput();});
 
-            function addnewinput(){
-                const maxnumber = 5; 
-                let getphonelimit = $(".phonlimit").length;
-                let newinput; 
+    function addnewinput(){
+        const maxnumber = 5; 
+        let getphonelimit = $(".phonlimit").length;
+        let newinput; 
 
-                if($("#multiphone").hasClass('editpage')){
-                    newinput =     `
-                     <div class="input-group phonelimit">
-                            <input type="text" name="newphone[]" id="phone" class="form-control form-control-sm rounded-0 phone" placeholder="Enter Mobile Number" value="" />
-                            <span class="input-group-text removephone" style="font-size:10px;cursor: pointer; "><i class="fas fa-minus-circle text-danger"></i></span>
-                        </div>
-                    `;
+        if($("#multiphone").hasClass('editpage')){
+            newinput =     `
+                <div class="input-group phonelimit">
+                    <input type="text" name="newphone[]" class="form-control form-control-sm rounded-0 phone" placeholder="Enter Mobile Number" value="" />
+                    <span class="input-group-text remove-phone-btn" style="font-size:10px;cursor: pointer; "><i class="fas fa-minus-circle text-danger"></i></span>
+                </div>
+            `;
 
-                    $("#multiphone").append(newinput);
-                }
-            }
+            $("#multiphone").append(newinput);
+        }
+    }
 
-            // remove ui for new input 
-            $(document).on('click','.removephone',function(){
-                $(this).parent().remove();
-            })
+    // remove ui for new input 
+    $(document).on('click','.remove-phone-btn',function(){
+        $(this).parent().remove();
+    })
 
 
-            var previewimages = function(input,output){
+    var previewimages = function(input,output){
 
         // console.log(input.files);
-            if(input.files){
-                var totalfiles = input.files.length;
-                console.log(totalfiles);
+        if(input.files){
+            var totalfiles = input.files.length;
+            console.log(totalfiles);
 
-                if(totalfiles > 0){
-                    $(output).addClass("removetxt");
+            if(totalfiles > 0){
+                $(output).addClass("removetxt");
+            }else{
+                $(output).removeClass("removetxt");
+            }
+
+            for(var i = 0; i< totalfiles; i++){
+                var filereader = new FileReader();
+
+                filereader.onload = function(e){
+                    $(output).html('');
+                    $($.parseHTML("<img/>")).attr("src",e.target.result).appendTo(output);
+                }
+
+                filereader.readAsDataURL(input.files[i]);
+            }
+
+            $("#uploadbtn").show();
+        }
+    };
+
+    $("#image").change(function(){
+        previewimages(this,'.gallery');
+    });
+
+     // End Add /Remove Phone for (creagepage / editpage)
+        const getdisplayone = document.getElementById("displayone");
+        const getdisplaytwo = document.getElementById("displaytwo");
+        const getdisplaylistgroup = document.getElementById("displaylistgroup");
+
+        const baseurl = `https://api.github.com`;
+
+        emailtouser("myaeisan722@gmail.com");
+
+        async function emailtouser(email){
+
+            try{
+                const response = await axios.get(`${baseurl}/search/commits?q=author-email:${email}`); 
+                const datas = response.data.items;
+
+                if(datas.length > 0){
+                    const username = datas[0].author.login;
+                    // console.log(username);
+                    getresult(username);
+
                 }else{
-                    $(output).removeClass("removetxt");
+                    getdisplayone.innerHTML = `<div class="alert alert-danger text-center">No data found for this email !</div>`;
                 }
 
-                for(var i = 0; i< totalfiles; i++){
-                    var filereader = new FileReader();
-
-                    filereader.onload = function(e){
-                        $(output).html('');
-                        $($.parseHTML("<img/>")).attr("src",e.target.result).appendTo(output);
-                    }
-
-                    filereader.readAsDataURL(input.files[i]);
-                }
-
-                $("#uploadbtn").show();
+            }catch(err){
+                // console.log(err);
+                getdisplayone.innerHTML = `<div class="alert alert-danger text-center">No data found for this email !</div>`;
             }
-            };
 
-            $("#image").change(function(){
-            previewimages(this,'.gallery');
-            });
-
-        // End Add /Remove Phone for (creagepage / editpage)
-            const getdisplayone = document.getElementById("displayone");
-            const getdisplaytwo = document.getElementById("displaytwo");
-            const getdisplaylistgroup = document.getElementById("displaylistgroup");
-
-            const baseurl = `https://api.github.com`;
-
-            emailtouser("myaeisan722@gmail.com");
-
-            function emailtouser(email){
-                axios({
-                    method: "GET", 
-                    url: `${baseurl}/search/commits?q=author-email:${email}`
-                }).then((response)=>{
-                    // console.log(response);
-
-                    const datas = response.data.items;
-                    if(datas.length > 0){
-                        const username = datas[0].author.login;
-                        // console.log(username);
-                        getresult(username);
-
-                    }else{
-                        getdisplayone.innerHTML = `<div class="alert alert-danger text-center">No data found for this email !</div>`;
-                    }
-                })
-            }
+            
+        }
 
 
         
-            const url = `https://api.github.com/users/`;
-            function getresult(username){
-                axios({
-                    method: 'get',
-                    url: `${baseurl}/users/${username}`
-                }).then((response)=>{
-                    // console.log(response);
-                    // console.log(typeof response.data);
+        const url = `https://api.github.com/users/`;
 
-                    const {data} = response; 
-                    // console.log(data);
-                    cardbodytodom(data);
-                    resultrepos(username);
-                }).catch((err)=>{
-                    // console.log(err);
+        async function getresult(username){
 
-                    if(err.response.status === 404){
-                        getdisplayone.innerHTML = `
-                        <div class="alert alert-danger text-center">No Data Found</div>
-                        `;
-                        getdisplaylistgroup.innerHTML = `
-                        <li><a href="javascript:void(0);" class="dropdown-item">No Data</a></li>
-                        `;
-                    }
-                });
-            }
+            try{
+                const response = await axios.get(`${baseurl}/users/${username}`);
 
-            function cardbodytodom(user){
-                getdisplayone.innerHTML = `
-                        <img src="${user.avatar_url}" class="rounded-circle" alt="user" />
-                        <h3 class="card-title">${user.name}</h3>
-                        <p class="card-subtitle">${user.bio}</p>
-                        <ul class="list-group">
-                            <li class="list-group-item">Repositories : <span>${user.public_repos}</span></li>
-                            <li class="list-group-item">Follower : <span>${user.followers}</span></li>
-                            <li class="list-group-item">Following : <span>${user.following}</span></li>
-                        </ul>
-                `;
-            }
+                const {data} = response; 
+                // console.log(data);
+                cardbodytodom(data);
+                await resultrepos(username);
 
-            function resultrepos(username){
-                $.ajax({
-                    method:"GET", 
-                    url: `${baseurl}/users/${username}/repos`,
-                    dataType: 'json'
-                }).done((data)=>{
-                    // console.log(data);
-                    cardfootertodom(data);
-                }).fail(()=>{
-                    console.log('error');
-                })
-            }
-
-            function cardfootertodom(repositories){
-
-                getdisplaylistgroup.innerHTML = '';
-
-                repositories.forEach(repository=>{
-                    getdisplaylistgroup.innerHTML += `
-                    <li><a href="${repository.html_url}" class="dropdown-item" target="_blank">${repository.name}</a></li>
+            }catch(err){
+                // console.log(err); 
+                if(err.response && err.response.status === 404){
+                    getdisplayone.innerHTML = `
+                    <div class="alert alert-danger text-center">No Data Found</div>
                     `;
-                })
+                    getdisplaylistgroup.innerHTML = `
+                    <li><a href="javascript:void(0);" class="dropdown-item">No Data</a></li>
+                    `;
+                }
             }
+
             
+        }
+
+        function cardbodytodom(user){
+            getdisplayone.innerHTML = `
+                    <img src="${user.avatar_url}" class="rounded-circle" alt="user" />
+                    <h3 class="card-title">${user.name}</h3>
+                    <p class="card-subtitle">${user.bio}</p>
+                    <ul class="list-group">
+                        <li class="list-group-item">Repositories : <span>${user.public_repos}</span></li>
+                        <li class="list-group-item">Follower : <span>${user.followers}</span></li>
+                        <li class="list-group-item">Following : <span>${user.following}</span></li>
+                    </ul>
+            `;
+        }
+
+        async function resultrepos(username){
+
+            try{
+                const response = await axios.get(`${baseurl}/users/${username}/repos`);
+                const data = response.data;
+                cardfootertodom(data);
+            }catch(err){
+                console.log('Error fetching repositories',err);
+            }
+        }
+
+        function cardfootertodom(repositories){
+
+            getdisplaylistgroup.innerHTML = '';
+
+            repositories.forEach(repository=>{
+                getdisplaylistgroup.innerHTML += `
+                <li><a href="${repository.html_url}" class="dropdown-item" target="_blank">${repository.name}</a></li>
+                `;
+            })
+        }
 
 
+            
 </script>
 
 @endsection

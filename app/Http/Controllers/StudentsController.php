@@ -14,7 +14,9 @@ use App\Mail\StudentMailBox;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Gender;
+use App\Models\Region;
 use App\Models\StudentPhone;
+use App\Models\Township;
 use Exception;
 use Illuminate\Support\Facades\Mail;
 
@@ -26,6 +28,7 @@ class StudentsController extends Controller
    
     public function index()
     {
+        $this->authorize('view', Student::class);
         $students = Student::all();
         return view('students.index',compact('students'));
     }
@@ -33,6 +36,7 @@ class StudentsController extends Controller
    
     public function create()
     {
+        $this->authorize('create', Student::class);
         return view('students.create');
     }
 
@@ -100,19 +104,22 @@ class StudentsController extends Controller
    
     public function edit($id)
     {
+        $this->authorize('edit', Student::class);
         $student = Student::findOrFail($id);
         $studentsphones = StudentPhone::where('student_id',$id)->get();
         $genders = Gender::orderBy('name','asc')->get();
         $countries = Country::orderBy('name','asc')->where('status_id',3)->get();
-        $cities = City::orderBy('name','asc')->where('country_id',$student->country_id)->where('status_id',3)->get(); 
-        return view('students.edit')->with("student",$student)->with("studentphones",$studentsphones)->with("genders",$genders)->with("countries",$countries)->with("cities",$cities);
+        $regions = Region::orderBy('name','asc')->where('status_id',3)->get();
+        $cities = City::orderBy('name','asc')->where('status_id',3)->get(); 
+        $townships = Township::orderBy('name','asc')->where('status_id',3)->get(); 
+        return view('students.edit')->with("student",$student)->with("studentphones",$studentsphones)->with("genders",$genders)->with("countries",$countries)->with("regions",$regions)->with("cities",$cities)->with("townships",$townships);
     }
 
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'firstname' => 'required',
-            'lastname' => 'required',
+            'editfirstname' => 'required',
+            'editlastname' => 'required',
             'remark' => 'max:1000'
         ]);
 
@@ -120,56 +127,95 @@ class StudentsController extends Controller
         $user_id = $user->id;
 
         $student = Student::findOrFail($id);
-        $student->firstname = $request['firstname'];
-        $student->lastname = $request['lastname'];
-        $student->slug = Str::slug($request['firstname']);
-        $student->gender_id = $request['gender_id'];
-        $student->age = $request['age'];
-        $student->dob = $request['dob']; 
-        $student->religion_id = $request['religion_id']; 
-        $student->email = $request['email'];
-        $student->nationalid = $request['nationalid'];
-        $student->country_id = $request['country_id'];
-        $student->city_id = $request['city_id'];
-        $student->address = $request['address'];
+
+        // check if the profile is locked 
+        if($student->isProfileLocked()){
+            return redirect()->back()->with('error','Profile locked. please contact to admin');
+        }
+
+
+        $student->firstname = $request['editfirstname'];
+        $student->lastname = $request['editlastname'];
+        $student->slug = Str::slug($request['editfirstname']);
+        $student->gender_id = $request['editgender_id'];
+        $student->age = $request['editage'];
+        $student->dob = $request['editdob']; 
+        $student->religion_id = $request['editreligion_id']; 
+        $student->email = $request['editemail'];
+        $student->nationalid = $request['editnational_id'];
+        $student->country_id = $request['editcountry_id'];
+        $student->region_id = $request['editregion_id'];
+        $student->city_id = $request['editcity_id'];
+        $student->township_id = $request['edittownship_id'];;
+        $student->address = $request['editaddress'];
         $student->remark = $request['remark'];
         $student->user_id = $user_id;
         $student->save();
 
         // Create / Update New Student Phone 
-         if(!empty($request->newphone)){
+        //  if(!empty($request->newphone)){
 
-            // extend new phone 
+        //     // extend new phone 
 
-            foreach($request['newphone'] as $key=>$phone){
-                $phonedatas = [
-                    'student_id' => $student['id'], 
-                    'phone' => $phone
-                ];
-                StudentPhone::insert($phonedatas);
+        //     foreach($request['newphone'] as $key=>$phone){
+        //         $phonedatas = [
+        //             'student_id' => $student['id'], 
+        //             'phone' => $phone
+        //         ];
+        //         StudentPhone::insert($phonedatas);
 
                 
-            }
+        //     }
 
-            // extend new phone and update existing phone in same time 
-            if($request['phone']){
-                foreach($request['phone'] as $key=>$phone ){
-                    StudentPhone::findOrFail($request['studentphones'][$key])->update([
-                        'phone' => $phone
-                    ]);
-                }
-            }
+        //     // extend new phone and update existing phone in same time 
+        //     if($request['phone']){
+        //         foreach($request['phone'] as $key=>$phone ){
+        //             StudentPhone::findOrFail($request['studentphones'][$key])->update([
+        //                 'phone' => $phone
+        //             ]);
+        //         }
+        //     }
 
             
-        }else{
-            // update existing phone 
+        // }else{
+        //     // update existing phone 
 
-            foreach($request['phone'] as $key=>$phone){
-                StudentPhone::findOrFail($request['studentphones'][$key])->update([
-                    'phone' => $phone
+        //     foreach($request['phone'] as $key=>$phone){
+        //         StudentPhone::findOrFail($request['studentphones'][$key])->update([
+        //             'phone' => $phone
+        //         ]);
+        //     }
+        // }
+
+        // Handling Student Phone Update / Create 
+
+        if($request->has('newphone')){
+            $newphones = $request->newphone; 
+
+            // insert new phone numbers 
+            foreach($newphones as $newphone){
+                StudentPhone::create([
+                    'student_id' => $student->id, 
+                    'phone' => $newphone
                 ]);
             }
         }
+
+        // Update Existing Student Phone 
+
+        if($request->has('phone') && $request->has('studentphoneid')){
+            foreach($request->phone as $key=>$phone){
+                if(!empty(trim($phone)) && isset($request->studentphoneid['$key'])){
+                    $getphoneid = $request->studentphoneid[$key]; 
+                    StudentPhone::findOrFail($request->studentphoneid[$key])->update([
+                        'phone'=> $phone
+                    ]);
+                }
+            }
+        }
+
+        // Recalculate Profile Score 
+        $student->calculateProfileScore();
 
         session()->flash('success','Successfully Updated');
         return redirect()->route('students.index');
@@ -178,6 +224,7 @@ class StudentsController extends Controller
     
     public function destroy($id)
     {
+        $this->authorize('delete', Student::class);
         $student = Student::findOrFail($id);
         $student->delete();
 

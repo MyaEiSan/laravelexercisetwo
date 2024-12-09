@@ -19,6 +19,16 @@ class Role extends Model
         'user_id'
     ];
 
+    public function permissions(){
+        // return $this->belongsToMany(Permission::class,'permission_roles');
+        // return $this->belongsToMany(Permission::class,'permission_roles')->withTimestamps();
+
+        // role ကနေ permission sync လုပ်တဲ့အခါ permission_roles table မှာ created_at updated_at ပါ save ဖို့ရာ withTimestamps ကိုသုံးတာ 
+
+        return $this->belongsToMany(Permission::class,'permission_roles','role_id','permission_id')->withTimestamps();
+
+    }
+
     public function user(){
         return $this->belongsTo(User::class);
     }

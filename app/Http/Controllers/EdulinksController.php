@@ -18,6 +18,7 @@ class EdulinksController extends Controller
 {
     public function index()
     {
+        $this->authorize('view',Edulink::class);
         // $data['edulinks'] = Edulink::orderBy('updated_at','desc')->paginate(5);
 
         // Method 1
@@ -139,6 +140,7 @@ class EdulinksController extends Controller
     
     public function destroy(string $id)
     {
+        $this->authorize('delete', Edulink::class);
         $edulink = Edulink::findOrFail($id);
 
         $edulink->delete();

@@ -19,28 +19,28 @@
                                 @error('startdate')
                                    <span class="text-danger">{{$message}}</span>
                                 @enderror
-                                <input type="date" name="startdate" id="startdate" class="form-control form-control-sm rounded-0" placeholder="Enter Start Date" value="{{old('startdate')}}" /> 
+                                <input type="date" name="startdate" id="startdate" class="form-control form-control-sm rounded-0" placeholder="Enter Start Date" value="{{old('startdate',$gettoday)}}" /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="enddate">End Date <span class="text-danger">*</span></label>
                                 @error('enddate')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
-                                <input type="date" name="enddate" id="enddate" class="form-control form-control-sm rounded-0" placeholder="Enter End Date" value="{{old('enddate')}}" /> 
+                                <input type="date" name="enddate" id="enddate" class="form-control form-control-sm rounded-0" placeholder="Enter End Date" value="{{old('enddate',now()->format('Y-m-d'))}}" /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="starttime">Start Time <span class="text-danger">*</span></label>
                                 @error('starttime')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
-                                <input type="time" name="starttime" id="starttime" class="form-control form-control-sm rounded-0" placeholder="Enter Start Time" value="{{old('starttime')}}" /> 
+                                <input type="time" name="starttime" id="starttime" class="form-control form-control-sm rounded-0" placeholder="Enter Start Time" value="{{old('starttime',$gettime)}}" /> 
                             </div>
                             <div class="col-md-6 form-group mb-3">
                                 <label for="endtime">End Time <span class="text-danger">*</span></label>
                                 @error('endtime')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
-                                <input type="time" name="endtime" id="endtime" class="form-control form-control-sm rounded-0" placeholder="Enter Start Time" value="{{old('endtime')}}" /> 
+                                <input type="time" name="endtime" id="endtime" class="form-control form-control-sm rounded-0" placeholder="Enter Start Time" value="{{old('endtime',now()->format('H:m'))}}" /> 
                             </div>
                             <div class="col-md-12 form-group">
                                 <label>Days</label>
@@ -76,7 +76,7 @@
                                 <select name="type_id" id="type_id" class="form-control form-control-sm rounded-0">
                                         <option selected disabled>Choose type</option>
                                         @foreach ($types as $type)
-                                            <option value="{{$type->id}}">{{$type->name}}</option>
+                                            <option value="{{$type->id}}" {{old('type_id') == $type->id ? 'selected': ''}}>{{$type->name}}</option>
                                         @endforeach
                                 </select>
                             </div>
@@ -105,7 +105,7 @@
                                 <select name="tag_id" id="tag_id" class="form-control form-control-sm rounded-0">
                                         <option selected disabled>Choose Tag</option>
                                         @foreach ($tags as $tag)
-                                            <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                            <option value="{{$tag->id}}" {{old('tag_id') == $tag->id?'selected':''}}>{{$tag->name}}</option>
                                         @endforeach
                                 </select>
                             </div>
@@ -114,7 +114,7 @@
                                 <label for="attshow">Show on Att Form <span class="text-danger">*</span></label>
                                 <select name="attshow" id="attshow" class="form-control form-control-sm rounded-0">
                                         @foreach ($attshows as $attshow)
-                                            <option value="{{$attshow->id}}">{{$attshow->name}}</option>
+                                            <option value="{{$attshow->id}}" {{old('attshow') == $attshow->id?'selected':''}}>{{$attshow->name}}</option>
                                         @endforeach
                                 </select>
                             </div>
@@ -123,7 +123,7 @@
                                 <label for="status_id">Status <span class="text-danger">*</span></label>
                                 <select name="status_id" id="status_id" class="form-control form-control-sm rounded-0">
                                         @foreach ($statuses as $status)
-                                            <option value="{{$status->id}}">{{$status->name}}</option>
+                                            <option value="{{$status->id}}" {{old('status_id') == $status->id?'selected':''}}>{{$status->name}}</option>
                                         @endforeach
                                 </select>
                             </div>

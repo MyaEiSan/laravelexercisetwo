@@ -46,41 +46,14 @@
                                 <div class="col ps-3">
                                     <div class="row">
                                         <div class="col">
-                                            <div>Status</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div>{{$leave->stage['name']}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row g-0 mb-2">
-                                <div class="col-auto">
-                                    <i class="fas fa-file"></i>
-                                </div>
-                                <div class="col ps-3">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div>Status</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            {{-- <div>{{$leave["attstatus"]["name"]}}</div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row g-0 mb-2">
-                                <div class="col-auto">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="col ps-3">
-                                    <div class="row">
-                                        <div class="col">
                                             <div>Authorize</div>
                                         </div>
                                         <div class="col-auto">
-                                            <div>{{$leave['user']['name']}}</div>
+                                            <div>
+                                                @foreach($leave->tagpersons($leave->tag) as $id=>$name) 
+                                                    <a href="{{route('students.show',$leave->tagpersonurl($id))}}">{{$name}}</a>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -176,23 +149,54 @@
             </div>
 
             <div class="col-md-8 col-lg-9">  
+                <h6>Compose</h6>
+                <div class="card border-0 rounded-0 shadow mb-4">
+                    <div class="card-body">
+                        <div class="accordion">
+                            <div class="acctitle">Email</div>
+                            <div class="acccontent">
+                                <div class="col-md-12 py-3">
+                                    <form action="{{route('students.mailbox')}}" method="POST">
+                                        @csrf 
+                                        <div class="row">
+                                            <div class="col-md-6 from-group mb-3">
+                                                <input type="email" name="cmpemail" id="cmpemail" class="form-control from-control-sm rounded-0" placeholder="To:" value="{{$leave->user["email"]}}" readonly/>
+                                            </div>
+                                            <div class="col-md-6 from-group mb-3">
+                                                <input type="text" name="cmpsubject" id="cmpsubject" class="form-control from-control-sm rounded-0" placeholder="Subject:" value=""/>
+                                            </div>
+                                            <div class="col-md-12 from-group mb-2">
+                                                <textarea  name="cmpcontent" id="cmpcontent" class="form-control from-control-sm rounded-0" rows="3" style="resize:none;" placeholder="Your message here..."></textarea>
+                                            </div>
+                                            <div class="col d-flex justify-content-end align-items-end">
+                                                <button type="submit" class="btn btn-secondary btn-sm rounded-0">Send</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <h6>Class</h6>
+                <div class="card border-0 rounded-0 shadow mb-4">
+                    <div class="card-body d-flex flex-wrap gap-3">
+                        @foreach ($leave->tagposts($leave->post_id) as $id=>$title)
+                        <div class="border shadow p-3 mb-3 enrollboxes">
+                            <a href="{{route('posts.show',$id)}}">{{$title}}</a>
+                        </div>  
+                        @endforeach
+                    </div>
+                </div>
 
                 <h6>Additional Info</h6>
                 <div class="card border-0 rounded-0 shadow mb-4">
                         <ul class="nav"> 
                             <li class="nav-item">
-                                <button type="button" id="autoclick" class="tablinks active" onclick="gettab(event,'follower')">Follower</button>
+                                <button type="button" id="autoclick" class="tablinks active" onclick="gettab(event,'follower')">Content</button>
                             </li>
-                            <li class="nav-item">
-                                <button type="button" class="tablinks" onclick="gettab(event,'following')">Following</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="tablinks" onclick="gettab(event,'liked')">Liked</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="tablinks" onclick="gettab(event,'remark')">Remark</button>
-                            </li>
+                            
                         </ul>
                 
                         <div class="tab-content">
@@ -201,21 +205,6 @@
                                 <h6>This is Home informations</h6>
                                 <p>{!! $leave->content !!}</p>
                             </div>
-                
-                            <div id="following" class="tab-panel">
-                                <h6>This is Profile informations</h6>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div>
-                
-                            <div id="liked" class="tab-panel">
-                                <h6>This is Contact informations</h6>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div>
-                
-                            <div id="remark" class="tab-panel">
-                                <p></p>
-                            </div>
-                
                         </div>
 
                 </div>
@@ -297,54 +286,94 @@
 
 @section('css')
     <style type="text/css">
+    .accordion{
+	width: 100%;
+}
 
-        /* start comment */
-        .chat-boxs{
-            height: 200px;
-            overflow-y:scroll;
-        }
-        /* end comment */
+.acctitle{
+	font-size: 14px;
+	user-select: none;
 
+	padding: 5px;
+	margin: 0;
 
-        /* Start Tab Box */
-        .nav{
-                display: flex;
+	cursor: pointer;
 
-                padding: 0;
-                margin: 0;
-            }
-
-            .nav .nav-item{
-                list-style-type: none;
-            }
-
-            .nav .tablinks{
-                border: none;
-                outline: none;
-                cursor: pointer;
-
-                padding: 14px 16px;
-
-                transition: background-color 0.3s;
-            }
-
-            .nav .tablinks:hover{
-                background-color: #f3f3f3;
-            }
-
-            .nav .tablinks.active{
-                color: blue;
-            }
+	position: relative;
+}
 
 
-            .tab-panel{
-                padding: 6px 12px;
-                display: none;
-            }
+.acctitle::after{
+	content: '\f0e0'; /* + */
+	font-family: "Font Awesome 5 Free";
 
-        /* End Tab Box */
+	/*position: absolute;
+	right: 15px;
+	top: 50%;
+	transform: translateY(-50%);*/
+
+	float: right;
+}
+
+.shown.acctitle::after{
+	content: '\f2b6';
+}
+
+/* .active::after{
+	content: '\f068';
+} */
+
+.acccontent{
+	height: 0;
+	background-color: #f4f4f4;
+	
+	text-align: justify;
+	font-size: 14px;
+
+	padding: 0 10px;
+
+	overflow: hidden;
+
+	transition: height 0.3s ease-in-out;
+}
+/* End Accordion  */
+    .nav{
+        display: flex;
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav .nav-item{
+        list-style-type: none;
+    }
+
+    .nav .tablinks{
+        border: none;
+        padding: 15px 20px;
+        cursor: pointer;
+
+        transition: background-color .3s ease-in;
+    }
+
+    .nav .tablinks:hover{
+        background-color: #f3f3f3;
+    }
+
+    .nav .tablinks.active{
+        color: blue;
+    }
 
 
+    .tab-pane{
+        padding: 5px 15px;
+
+        display: none;
+    }
+
+    /* End Tab Box  */
     </style>
 @endsection
 
@@ -405,6 +434,42 @@
 
         document.getElementById('autoclick').click();
         // End Tab Box
+
+        // End Tab Box 
+
+// Start Accordion
+var getacctitles = document.getElementsByClassName("acctitle");
+// console.log(getacctitles); //HTML Collection
+var getacccontents = document.querySelectorAll(".acccontent");
+// console.log(getacccontent); //NodeList
+
+
+for(var x = 0; x < getacctitles.length; x++){
+	// console.log(x);
+
+	getacctitles[x].addEventListener('click',function(e){
+		// console.log(e.target);
+		// console.log(this);
+
+		this.classList.toggle("shown");
+		var getcontent = this.nextElementSibling;
+		// console.log(getcontent);
+
+		if(getcontent.style.height){
+			getcontent.style.height = null; //beware can't set 0
+		}else{
+			// console.log(getcontent.scrollHeight);
+			getcontent.style.height= getcontent.scrollHeight + "px";
+		}
+		
+	});
+
+	if(getacctitles[x].classList.contains("shown")){
+		getacccontents[x].style.height = getacccontents[x].scrollHeight+"px";
+	}
+
+}
+// End Accordion 
     
     </script>
 @endsection

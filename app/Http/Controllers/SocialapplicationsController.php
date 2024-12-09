@@ -15,6 +15,7 @@ class SocialapplicationsController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Socialapplication::class);
         $socialapplications = Socialapplication::all();
         $statuses = Status::whereIn('id',[3,4])->get();
         return view('socialapplications.index',compact('socialapplications','statuses'));
@@ -29,7 +30,7 @@ class SocialapplicationsController extends Controller
     
     public function store(Request $request)
     {
-
+        $this->authorize('create', Socialapplication::class);
         $this->validate($request,[
             'name' => 'required|max:50|unique:types,name',
             'status_id' => 'required|in:3,4'
@@ -71,6 +72,7 @@ class SocialapplicationsController extends Controller
     
     public function edit(string $id)
     {
+        $this->authorize('edit', Socialapplication::class);
         $socialapplication = Socialapplication::findOrFail($id);
         return response()->json($socialapplication);
     }
@@ -115,6 +117,7 @@ class SocialapplicationsController extends Controller
 
     public function destroy(string $id)
     {
+        $this->authorize('delete', Socialapplication::class);
         try{
 
             $socialapplication = Socialapplication::where('id',$id)->delete();

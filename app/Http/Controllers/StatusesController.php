@@ -16,6 +16,7 @@ class StatusesController extends Controller
    
     public function index()
     {
+        $this->authorize('view', Status::class);
         $statuses = Status::all();
         return view('statuses.index',compact('statuses'));
     }
@@ -29,6 +30,7 @@ class StatusesController extends Controller
     
     public function store(Request $request)
     {
+        $this->authorize('create', Status::class);
         $this->validate($request,[
             'name' => 'required|unique:statuses,name'
         ]);
@@ -65,6 +67,7 @@ class StatusesController extends Controller
     
     public function update(Request $request, $id)
     {
+        $this->authorize('edit', Status::class);
         $this->validate($request,[
             'name' => 'required|unique:statuses,name,'.$id
         ]);
@@ -89,6 +92,7 @@ class StatusesController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', Status::class);
         $status = Status::findOrFail($id);
         $status->delete();
 

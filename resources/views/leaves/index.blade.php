@@ -3,9 +3,12 @@
 @section('content')
     {{-- Start Page Content  --}}
     <div class="container-fluid">
+        @can('create',App\Models\Leave::class) 
+            <div class="col-md-12">
+                <a href="{{route('leaves.create')}}" class="btn btn-primary btn-sm rounded-0">Create</a>
+            </div>
+        @endcan
         <div class="col-md-12">
-
-            <a href="{{route('leaves.create')}}" class="btn btn-primary btn-sm rounded-0">Create</a>
             <div class="mt-3">
                 <a href="javascript:void(0);" id="bulkdelete-btn" class="btn btn-danger btn-sm rounded-0 mb-2">Bulk Delete</a>
             </div>
@@ -41,10 +44,10 @@
                         </th>
                         <th>No</th>
                         <th>Student ID</th>
-                        <th>Class</th>
+                        {{-- <th>Class</th> --}}
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Tag</th>
+                        {{-- <th>Tag</th> --}}
                         <th>Stage</th>
                         <th>By</th>
                         <th>Created At</th>
@@ -59,11 +62,14 @@
                             <input type="checkbox" name="singlechecks" class="form-check-input singlechecks" value="{{$leave->id}}" />
                         </td>
                         <td>{{$idx + $leaves->firstItem()}}</td>
-                        <td><a href="{{route('students.show',$leave->studenturl())}}">{{$leave->student($leave->user_id)}}</a></td>
-                        <td><a href="{{route('posts.show',$leave->post_id)}}">{{$leave->post['title']}}</a></td>
+                        {{-- <td><a href="{{route('students.show',$leave->studenturl())}}">{{$leave->student($leave->user_id)}}</a></td> --}}
+                        {{-- <td><a href="{{route('posts.show',$leave->post_id)}}">{{$leave->post['title']}}</a></td> --}}
+                        <td>
+                            <a href="{{route('leaves.show',$leave->id)}}">{{Str::limit($leave->title,20)}}</a>
+                        </td>
                         <td>{{$leave->startdate}}</td>
                         <td>{{$leave->enddate}}</td>
-                        <td>{{$leave->tagperson['name']}}</td>
+                        {{-- <td>{{$leave->tagperson['name']}}</td> --}}
                         <td>{{$leave->stage['name']}}</td>
                         <td>{{$leave->user['name']}}</td>
                         <td>{{$leave->created_at->format('d M Y')}}</td>

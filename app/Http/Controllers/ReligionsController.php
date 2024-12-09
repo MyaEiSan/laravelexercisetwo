@@ -12,7 +12,7 @@ class ReligionsController extends Controller
 {
     public function index()
     {
-
+        $this->authorize('view', Religion::class);
         $religions = Religion::where(function($query){
             if($getname = request('filtername')){
                 $query->where('name','LIKE','%'.$getname.'%');
@@ -34,6 +34,7 @@ class ReligionsController extends Controller
     
     public function store(Request $request)
     {
+        $this->authorize('create', Religion::class);
         $this->validate($request,[
             'name' => 'required|unique:countries,name',
             'status_id' => 'required'
@@ -70,6 +71,7 @@ class ReligionsController extends Controller
     
     public function update(Request $request, $id)
     {
+        $this->authorize('edit', Religion::class);
         $this->validate($request,[
             'editname' => 'required|unique:religions,name,'.$id,
 
@@ -94,6 +96,7 @@ class ReligionsController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', Religion::class);
         $religion = Religion::findOrFail($id);
         $religion->delete();
 
